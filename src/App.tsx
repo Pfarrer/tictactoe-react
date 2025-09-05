@@ -1,21 +1,26 @@
-import { Layer, Rect, Stage } from "react-konva";
+import { Stage } from "react-konva";
 import "./App.css";
+import { useRef } from "react";
+import Konva from "konva";
+import { useWindowSize } from "./hooks/useWindowSize";
+import { Grid } from "./Grid";
+import { STAGE_SIZE } from "./constants";
 
 function App() {
+  const stageRef = useRef<Konva.Stage>(null);
+  const windowSize = useWindowSize();
+
   return (
     <>
-      <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
-          <Rect
-            x={20}
-            y={50}
-            width={100}
-            height={100}
-            fill="red"
-            shadowBlur={10}
-            draggable
-          />
-        </Layer>
+      <Stage
+        width={windowSize.width}
+        height={windowSize.height}
+        scaleX={windowSize.width / STAGE_SIZE}
+        scaleY={windowSize.height / STAGE_SIZE}
+        style={{ background: "lightgreen" }}
+        ref={stageRef}
+      >
+        <Grid />
       </Stage>
     </>
   );
