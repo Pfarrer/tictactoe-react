@@ -1,3 +1,5 @@
+import { create, rawReturn } from "mutative";
+
 export type BoardCellValue = " " | "x" | "o";
 
 export interface GameState {
@@ -13,26 +15,44 @@ export interface GameState {
     BoardCellValue,
   ];
   gameStatus: "pristine" | "active" | "finished";
-  naxtTurn: "human" | "computer";
+  nextTurn: "human" | "computer";
   winner?: "human" | "computer";
 }
 
-// export interface GameAction {
-//   type: GameActionKind;
-//   payload: any;
-// }
 export type GameAction =
   | { type: "reset" }
   | { type: "playerMoved"; cellIdx: number }
   | { type: "computerMoved"; cellIdx: number };
 
 export function reducer(state: GameState, action: GameAction): GameState {
-  console.log(action);
-  return state;
+  const [draft, finalize] = create(state);
+  
+  switch (action.type) {
+    case "playerMoved":
+      if (draft.nextTurn === "human" && draft.gameStatus !== "finished" && draft.board[action.cellIdx] === " ") {
+        draft.board[action.cellIdx] = "x";
+        draft.gameStatus = "active";
+        draft.nextTurn = "computer";
+      }
+      break;
+    case "computerMoved":
+      if (draft.nextTurn === "computer" && draft.gameStatus !== "finished" && draft.board[action.cellIdx] === " ") {
+        draft.board[action.cellIdx] = "o";
+        draft.gameStatus = "active";
+        draft.nextTurn = "human";
+      }
+      break;
+    case "reset":
+      return rawReturn(initState);
+    default:
+      console.error("Action not implemented", action);
+  }
+  
+  return finalize();
 }
 
 export const initState: GameState = {
   board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
   gameStatus: "pristine",
-  naxtTurn: "human",
+  nextTurn: "human",
 };
