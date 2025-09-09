@@ -39,5 +39,5 @@ function HorizontalGridLine({ idx }: { idx: 1 | 2 }) {
 }
 
 function GridLine({ points }: { points: number[] }) {
-  return <Line points={points} stroke="black" strokeWidth={2} />;
+  return <Line points={points} stroke="black" strokeWidth={1} />;
 }

@@ -1,34 +1,24 @@
-import { Stage } from "react-konva";
+import { useReducer } from "react";
 import "./App.css";
-import { useReducer, useRef } from "react";
-import Konva from "konva";
-import { useWindowSize } from "./hooks/useWindowSize";
-import { Grid } from "./Grid";
-import { STAGE_SIZE } from "./constants";
-import { reducer, initState } from "./core/state";
 import { Cells } from "./Cells";
+import { ComputerPlayer } from "./ComputerPlayer";
+import { GameStage } from "./GameStage";
 import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
+import { Grid } from "./Grid";
+import { initState, reducer } from "./core/state";
 
 function App() {
-  const stageRef = useRef<Konva.Stage>(null);
-  const windowSize = useWindowSize();
   const [state, dispatch] = useReducer(reducer, initState);
+  console.log(state);
   
   return (
     <GameStateContext value={state}>
       <GameStateDispatchContext value={dispatch}>
-        <Stage
-          width={windowSize.width}
-          height={windowSize.height}
-          scaleX={windowSize.width / STAGE_SIZE}
-          scaleY={windowSize.height / STAGE_SIZE}
-          style={{ background: "lightgreen" }}
-          ref={stageRef}
-        >
+        <GameStage>
           <Cells />
           <Grid />
-          
-        </Stage>
+          <ComputerPlayer />
+        </GameStage>
       </GameStateDispatchContext>
     </GameStateContext>
   );
