@@ -9,9 +9,13 @@ export function Cells() {
   const gameState = useContext(GameStateContext);
 
   return (
-    <Layer listening={gameState.gameStatus !== "finished" && gameState.nextTurn === "human"}>
+    <Layer
+      listening={
+        gameState.gameStatus !== 'finished' && gameState.nextTurn === 'human'
+      }
+    >
       {gameState.board.map((cellState, idx) => (
-        <Cell key={idx} idx={idx} state={cellState}></Cell>
+        <Cell key={idx} idx={idx} cellState={cellState}></Cell>
       ))}
     </Layer>
   );
@@ -20,19 +24,27 @@ export function Cells() {
 const CELL_COLOR_DEFAULT = 'white';
 const CELL_COLOR_HOVER = 'gray';
 
-export function Cell({ idx, state }: { idx: number; state: BoardCellValue }) {
+export function Cell({
+  idx,
+  cellState,
+}: {
+  idx: number;
+  cellState: BoardCellValue;
+}) {
   const rectRef = useRef<Konva.Rect>(null!);
   const dispatch = useContext(GameStateDispatchContext);
 
   const onHover = (isHovered: boolean) => {
+    if (cellState !== ' ') return;
+
     rectRef.current.to({
       fill: isHovered ? CELL_COLOR_HOVER : CELL_COLOR_DEFAULT,
       duration: 0.1,
     });
   };
   const onClick = () => {
-    dispatch({ type: "playerMoved", cellIdx: idx });
-    onHover(false);
+    if (cellState !== ' ') return;
+    dispatch({ type: 'player_move_requested', cellIdx: idx });
   };
 
   return (
@@ -45,47 +57,52 @@ export function Cell({ idx, state }: { idx: number; state: BoardCellValue }) {
         ref={rectRef}
         width={CELL_SIZE}
         height={CELL_SIZE}
-        fill={CELL_COLOR_DEFAULT}
+        fill={cellState === ' ' ? CELL_COLOR_DEFAULT : 'transparent'}
         onMouseEnter={(_) => onHover(true)}
         onMouseLeave={(_) => onHover(false)}
       />
 
-      {state === 'o' && (
-        <Circle
-          x={CELL_SIZE / 2}
-          y={CELL_SIZE / 2}
-          radius={CELL_SIZE / 4}
-          strokeWidth={0.7}
-          stroke={'red'}
-        />
-      )}
-
-      {state === 'x' && (
-        <>
-          <Line
-            points={[
-              CELL_SIZE / 4,
-              CELL_SIZE / 4,
-              3 * CELL_SIZE / 4,
-              3 * CELL_SIZE / 4,
-            ]}
-            
-            strokeWidth={0.7}
-            stroke={'black'}
-          />
-          <Line
-            points={[
-              3 * CELL_SIZE / 4,
-              CELL_SIZE / 4,
-              CELL_SIZE / 4,
-              3 * CELL_SIZE / 4,
-            ]}
-            
-            strokeWidth={0.7}
-            stroke={'black'}
-          />
-        </>
-      )}
+      {cellState === 'o' && <ComputerCellMark />}
+      {cellState === 'x' && <HumanCellMark />}
     </Group>
+  );
+}
+
+function ComputerCellMark() {
+  return (
+    <Circle
+      x={CELL_SIZE / 2}
+      y={CELL_SIZE / 2}
+      radius={CELL_SIZE / 4}
+      strokeWidth={0.7}
+      stroke={'red'}
+    />
+  );
+}
+
+function HumanCellMark() {
+  return (
+    <>
+      <Line
+        points={[
+          CELL_SIZE / 4,
+          CELL_SIZE / 4,
+          (3 * CELL_SIZE) / 4,
+          (3 * CELL_SIZE) / 4,
+        ]}
+        strokeWidth={0.7}
+        stroke={'black'}
+      />
+      <Line
+        points={[
+          (3 * CELL_SIZE) / 4,
+          CELL_SIZE / 4,
+          CELL_SIZE / 4,
+          (3 * CELL_SIZE) / 4,
+        ]}
+        strokeWidth={0.7}
+        stroke={'black'}
+      />
+    </>
   );
 }
