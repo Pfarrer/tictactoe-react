@@ -1,5 +1,7 @@
-import { create, rawReturn } from "mutative";
+import { create } from "mutative";
 import { hasWinner } from "./hasWinner";
+
+export type GameMode = "Human-vs-Computer";
 
 export type BoardCellValue = " " | "x" | "o";
 
@@ -15,13 +17,22 @@ export interface GameState {
     BoardCellValue,
     BoardCellValue,
   ];
+  gameMode: GameMode;
   gameStatus: "pristine" | "active" | "finished";
   nextTurn: "human" | "computer";
   winner?: "human" | "computer";
 }
 
+export const initState = () => ({
+  board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+  gameMode: "Human-vs-Computer",
+  gameStatus: "pristine",
+  nextTurn: "human",
+} as GameState);
+
 export type GameAction =
   | { type: "reset_requested" }
+  | { type: "start_requested"; gameMode: GameMode }
   | { type: "player_move_requested"; cellIdx: number }
   | { type: "computer_move_requested"; cellIdx: number };
 
@@ -43,22 +54,19 @@ export function reducer(state: GameState, action: GameAction): GameState {
         draft.nextTurn = "human";
       }
       break;
+    case "start_requested":
+      draft.gameMode = action.gameMode;
+      draft.gameStatus = "active";
+      break;
     case "reset_requested":
-      return rawReturn(initState);
+      return initState();
     default:
       console.error("Action not implemented", action);
   }
 
   updateGameStatus(draft);
-
   return finalize();
 }
-
-export const initState: GameState = {
-  board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-  gameStatus: "pristine",
-  nextTurn: "human",
-};
 
 function updateGameStatus(draft: GameState) {
   if (draft.gameStatus !== "active") {

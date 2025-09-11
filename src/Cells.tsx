@@ -11,7 +11,7 @@ export function Cells() {
   return (
     <Layer
       listening={
-        gameState.gameStatus !== 'finished' && gameState.nextTurn === 'human'
+        gameState.gameStatus === 'active' && gameState.nextTurn === 'human'
       }
     >
       {gameState.board.map((cellState, idx) => (
@@ -31,8 +31,12 @@ export function Cell({
   idx: number;
   cellState: BoardCellValue;
 }) {
-  const rectRef = useRef<Konva.Rect>(null!);
+  const rectRef = useRef<Konva.Rect>(null as never);
   const dispatch = useContext(GameStateDispatchContext);
+
+  function isCellClickable() {
+    return cellState === ' ';
+  }
 
   const onHover = (isHovered: boolean) => {
     if (cellState !== ' ') return;
@@ -57,7 +61,7 @@ export function Cell({
         ref={rectRef}
         width={CELL_SIZE}
         height={CELL_SIZE}
-        fill={cellState === ' ' ? CELL_COLOR_DEFAULT : 'transparent'}
+        fill={isCellClickable() ? CELL_COLOR_DEFAULT : 'transparent'}
         onMouseEnter={(_) => onHover(true)}
         onMouseLeave={(_) => onHover(false)}
       />
