@@ -1,5 +1,6 @@
+import { describe, expect, it } from 'vitest';
 import { hasWinner } from './hasWinner';
-import type { BoardCellValue } from './state';
+import type { Board } from './state';
 
 describe('hasWinner', () => {
   it('finds no winner on an empty board', () => {
@@ -35,15 +36,30 @@ describe('hasWinner', () => {
     const board = parseBoard('  x', ' x ', 'x  ');
     expect(hasWinner(board)).toBe('human');
   });
+
+  it('finds winner diagonally in real board', () => {
+    const board:Board = [
+        "x",
+        "o",
+        "o",
+        "o",
+        "x",
+        "x",
+        "x",
+        "o",
+        "x"
+    ];
+    expect(hasWinner(board)).toBe('human');
+});
 });
 
 function parseBoard(
   row1: string,
   row2: string,
   row3: string
-): BoardCellValue[] {
+): Board {
   return row1
     .split('')
     .concat(row2.split(''))
-    .concat(row3.split('')) as BoardCellValue[];
+    .concat(row3.split('')) as Board;
 }

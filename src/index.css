@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+body {
+    @apply text-gray-900;
+}
+
+h2 {
+    @apply text-4xl mb-4 font-bold leading-none tracking-tight;
+}
+h3 {
+    @apply text-xl mb-2;
+}
+
+button {
+    @apply bg-emerald-400 border border-emerald-500 focus:outline-none hover:bg-emerald-500 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-4 py-2 me-2 my-2;
+}

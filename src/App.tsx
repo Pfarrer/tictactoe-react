@@ -1,5 +1,4 @@
 import { useReducer } from "react";
-import "./App.css";
 import { Cells } from "./Cells";
 import { ComputerPlayer } from "./ComputerPlayer";
 import { GameStage } from "./GameStage";

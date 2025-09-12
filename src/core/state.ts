@@ -2,23 +2,15 @@ import { create } from "mutative";
 import { hasWinner } from "./hasWinner";
 
 export type GameMode = "Human-vs-Computer";
+export type GameStatus = "pristine" | "active" | "finished";
 
 export type BoardCellValue = " " | "x" | "o";
+export type Board = BoardCellValue[] & { length: 9 };
 
 export interface GameState {
-  board: [
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-    BoardCellValue,
-  ];
+  board: Board;
   gameMode: GameMode;
-  gameStatus: "pristine" | "active" | "finished";
+  gameStatus: GameStatus;
   nextTurn: "human" | "computer";
   winner?: "human" | "computer";
 }
@@ -41,16 +33,14 @@ export function reducer(state: GameState, action: GameAction): GameState {
   
   switch (action.type) {
     case "player_move_requested":
-      if (draft.nextTurn === "human" && draft.gameStatus !== "finished" && draft.board[action.cellIdx] === " ") {
+      if (draft.gameStatus === "active" && draft.nextTurn === "human" && draft.board[action.cellIdx] === " ") {
         draft.board[action.cellIdx] = "x";
-        draft.gameStatus = "active";
         draft.nextTurn = "computer";
       }
       break;
     case "computer_move_requested":
-      if (draft.nextTurn === "computer" && draft.gameStatus !== "finished" && draft.board[action.cellIdx] === " ") {
+      if (draft.gameStatus === "active" && draft.nextTurn === "computer" && draft.board[action.cellIdx] === " ") {
         draft.board[action.cellIdx] = "o";
-        draft.gameStatus = "active";
         draft.nextTurn = "human";
       }
       break;
@@ -77,5 +67,11 @@ function updateGameStatus(draft: GameState) {
   if (winner !== undefined) {
     draft.winner = winner;
     draft.gameStatus = "finished";
+  } else {
+    const hasEmptyCell = draft.board.find(cell => cell === " ") !== undefined;
+    if (!hasEmptyCell) {
+      delete draft.winner;
+      draft.gameStatus = "finished";
+    }
   }
 }

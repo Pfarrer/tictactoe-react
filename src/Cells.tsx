@@ -7,6 +7,11 @@ import type { BoardCellValue } from './core/state';
 
 export function Cells() {
   const gameState = useContext(GameStateContext);
+  const dispatch = useContext(GameStateDispatchContext);
+
+  const onCellClick = (idx: number) => {
+    dispatch({ type: 'player_move_requested', cellIdx: idx });
+  };
 
   return (
     <Layer
@@ -15,7 +20,13 @@ export function Cells() {
       }
     >
       {gameState.board.map((cellState, idx) => (
-        <Cell key={idx} idx={idx} cellState={cellState}></Cell>
+        <Group
+          x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
+          y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
+          onClick={() => onCellClick(idx)}
+        >
+          <Cell key={idx} cellState={cellState}></Cell>
+        </Group>
       ))}
     </Layer>
   );
@@ -24,18 +35,13 @@ export function Cells() {
 const CELL_COLOR_DEFAULT = 'white';
 const CELL_COLOR_HOVER = 'gray';
 
-export function Cell({
-  idx,
-  cellState,
-}: {
-  idx: number;
-  cellState: BoardCellValue;
-}) {
+export function Cell({ cellState }: { cellState: BoardCellValue }) {
+  const state = useContext(GameStateContext);
   const rectRef = useRef<Konva.Rect>(null as never);
-  const dispatch = useContext(GameStateDispatchContext);
 
-  function isCellClickable() {
-    return cellState === ' ';
+  function cellFillColor() {
+    const isClickable = cellState === ' ' && state.gameStatus === 'active';
+    return isClickable ? CELL_COLOR_DEFAULT : 'transparent';
   }
 
   const onHover = (isHovered: boolean) => {
@@ -46,29 +52,20 @@ export function Cell({
       duration: 0.1,
     });
   };
-  const onClick = () => {
-    if (cellState !== ' ') return;
-    dispatch({ type: 'player_move_requested', cellIdx: idx });
-  };
 
   return (
-    <Group
-      x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
-      y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
-      onClick={onClick}
-    >
+    <>
       <Rect
         ref={rectRef}
         width={CELL_SIZE}
         height={CELL_SIZE}
-        fill={isCellClickable() ? CELL_COLOR_DEFAULT : 'transparent'}
+        fill={cellFillColor()}
         onMouseEnter={(_) => onHover(true)}
         onMouseLeave={(_) => onHover(false)}
       />
-
       {cellState === 'o' && <ComputerCellMark />}
       {cellState === 'x' && <HumanCellMark />}
-    </Group>
+    </>
   );
 }
 

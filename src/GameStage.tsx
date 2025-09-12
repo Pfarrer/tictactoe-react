@@ -15,7 +15,7 @@ export function GameStage({
       height={windowSize.height}
       scaleX={windowSize.width / STAGE_SIZE}
       scaleY={windowSize.height / STAGE_SIZE}
-      style={{ background: 'lightgreen' }}
+      style={{ background: 'var(--color-emerald-100)' }}
     >
       {children}
     </Stage>
