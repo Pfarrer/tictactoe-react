@@ -21,11 +21,12 @@ export function Cells() {
     >
       {gameState.board.map((cellState, idx) => (
         <Group
+          key={idx}
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
           y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
           onClick={() => onCellClick(idx)}
         >
-          <Cell key={idx} cellState={cellState}></Cell>
+          <Cell cellState={cellState}></Cell>
         </Group>
       ))}
     </Layer>
