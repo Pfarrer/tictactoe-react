@@ -9,7 +9,6 @@ import { MenuDialog } from "./MenuDialog";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initState());
-  console.log(state);
   
   return (
     <GameStateContext value={state}>
