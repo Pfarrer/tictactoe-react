@@ -61,8 +61,8 @@ export function Cell({ cellState }: { cellState: BoardCellValue }) {
         width={CELL_SIZE}
         height={CELL_SIZE}
         fill={cellFillColor()}
-        onMouseEnter={(_) => onHover(true)}
-        onMouseLeave={(_) => onHover(false)}
+        onMouseEnter={() => onHover(true)}
+        onMouseLeave={() => onHover(false)}
       />
       {cellState === 'o' && <ComputerCellMark />}
       {cellState === 'x' && <HumanCellMark />}

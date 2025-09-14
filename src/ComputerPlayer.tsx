@@ -6,7 +6,7 @@ export function ComputerPlayer() {
     const dispatch = useContext(GameStateDispatchContext);
 
     if (gameState.gameStatus !== "finished" && gameState.nextTurn === "computer") {
-        for (var i=0;i<1000;i++) {
+        for (let i=0;i<1000;i++) {
             const idx = Math.round(Math.random() * 8);
             if (gameState.board[idx] === " ") {
                 dispatch({ type: "computer_move_requested", cellIdx: idx });
