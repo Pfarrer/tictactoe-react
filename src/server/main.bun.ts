@@ -10,18 +10,18 @@ Bun.serve({
   },
   
   websocket: {
-    message(ws, message) {
+    message(_ws, message) {
       console.log('message', message);
     },
     open(ws) {
       console.log('open');
       ws.send('hello');
     },
-    close(ws, code, message) {
+    close(ws, _code, _message) {
       console.log('close');
       ws.send('bye');
     },
-    drain(ws) {
+    drain(_ws) {
       console.log('drain');
     },
   },
