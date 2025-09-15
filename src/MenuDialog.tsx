@@ -1,5 +1,6 @@
-import { useContext, type ReactNode } from 'react';
+import { useContext, useState, type ReactNode } from 'react';
 import { GameStateContext, GameStateDispatchContext } from './GameStateConext';
+import type { Difficulty } from './core/state';
 
 export function MenuDialog() {
   const { gameStatus } = useContext(GameStateContext);
@@ -31,9 +32,10 @@ function DialogWithBackdrop({
 
 function MainMenuDialogContent() {
   const dispatch = useContext(GameStateDispatchContext);
+  const [difficulty, setDifficulty] = useState<Difficulty>('Luck');
 
   function onStartClick() {
-    dispatch({ type: 'start_requested', gameMode: 'Human-vs-Computer' });
+    dispatch({ type: 'start_requested', gameMode: 'Human-vs-Computer', difficulty });
   }
 
   return (
@@ -41,16 +43,16 @@ function MainMenuDialogContent() {
       <h2>TicTacToe</h2>
       <section className="flex gap-4">
         <div>
-          <h3>Single Player</h3>
-          <label>
-            Difficulty:
-            <select className="block">
-              <option>Luck (random moves only)</option>
-              <option>Simple (planning 1 step ahead)</option>
-              <option>Hard (planning all steps ahead)</option>
-            </select>
-          </label>
-          <button onClick={onStartClick}>Start!</button>
+            <h3>Single Player</h3>
+            <label>
+                Difficulty:
+                <select className="block" value={difficulty} onChange={e => setDifficulty(e.target.value as Difficulty)}>
+                    <option value="Luck">Luck (random moves only)</option>
+                    <option value="Simple">Simple (planning 1 step ahead)</option>
+                    <option value="Hard">Hard (planning all steps ahead)</option>
+                </select>
+            </label>
+            <button onClick={onStartClick}>Start!</button>
         </div>
         <div>
           <h3>Multi Player</h3>

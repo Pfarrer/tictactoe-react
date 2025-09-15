@@ -7,8 +7,11 @@ export type GameStatus = "pristine" | "active" | "finished";
 export type BoardCellValue = " " | "x" | "o";
 export type Board = BoardCellValue[] & { length: 9 };
 
+export type Difficulty = "Luck" | "Simple" | "Hard";
+
 export interface GameState {
   board: Board;
+  difficulty: Difficulty;
   gameMode: GameMode;
   gameStatus: GameStatus;
   nextTurn: "human" | "computer";
@@ -17,6 +20,7 @@ export interface GameState {
 
 export const initState = () => ({
   board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+  difficulty: "Luck",
   gameMode: "Human-vs-Computer",
   gameStatus: "pristine",
   nextTurn: "human",
@@ -24,7 +28,7 @@ export const initState = () => ({
 
 export type GameAction =
   | { type: "reset_requested" }
-  | { type: "start_requested"; gameMode: GameMode }
+  | { type: "start_requested"; gameMode: GameMode, difficulty: Difficulty }
   | { type: "player_move_requested"; cellIdx: number }
   | { type: "computer_move_requested"; cellIdx: number };
 
@@ -46,6 +50,7 @@ export function reducer(state: GameState, action: GameAction): GameState {
       break;
     case "start_requested":
       draft.gameMode = action.gameMode;
+      draft.difficulty = action.difficulty;
       draft.gameStatus = "active";
       break;
     case "reset_requested":
