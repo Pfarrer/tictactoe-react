@@ -4,10 +4,14 @@ import { GameStateContext, GameStateDispatchContext } from './GameStateConext';
 export function MenuDialog() {
   const { gameStatus } = useContext(GameStateContext);
 
-  return gameStatus !== 'active' && <DialogWithBackdrop>
+  return (
+    gameStatus !== 'active' && (
+      <DialogWithBackdrop>
         {gameStatus === 'pristine' && <MainMenuDialogContent />}
         {gameStatus === 'finished' && <GameFinishedDialogContent />}
-      </DialogWithBackdrop>;
+      </DialogWithBackdrop>
+    )
+  );
 }
 
 function DialogWithBackdrop({
@@ -37,21 +41,21 @@ function MainMenuDialogContent() {
       <h2>TicTacToe</h2>
       <section className="flex gap-4">
         <div>
-            <h3>Single Player</h3>
-            <label>
-                Difficulty:
-                <select className='block'>
-                    <option>Luck (random moves only)</option>
-                    <option>Simple (planning 1 step ahead)</option>
-                    <option>Hard (planning all steps ahead)</option>
-                </select>
-            </label>
-            <button onClick={onStartClick}>Start!</button>
+          <h3>Single Player</h3>
+          <label>
+            Difficulty:
+            <select className="block">
+              <option>Luck (random moves only)</option>
+              <option>Simple (planning 1 step ahead)</option>
+              <option>Hard (planning all steps ahead)</option>
+            </select>
+          </label>
+          <button onClick={onStartClick}>Start!</button>
         </div>
         <div>
-            <h3>Multi Player</h3>
-            <div className="break-all"></div>
-            <button onClick={onStartClick}>Connect to Server</button>
+          <h3>Multi Player</h3>
+          <div className="break-all"></div>
+          <button onClick={onStartClick}>Connect to Server</button>
         </div>
       </section>
     </div>

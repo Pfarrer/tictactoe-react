@@ -25,6 +25,7 @@ export function Cells() {
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
           y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
           onClick={() => onCellClick(idx)}
+          onTap={() => onCellClick(idx)}
         >
           <Cell cellState={cellState}></Cell>
         </Group>
