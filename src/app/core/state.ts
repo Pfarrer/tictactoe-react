@@ -29,6 +29,7 @@ export const initState = () => ({
 export type GameAction =
   | { type: "reset_requested" }
   | { type: "start_requested"; gameMode: GameMode, difficulty: Difficulty }
+  | { type: "connect_requested"; serverUrl: string }
   | { type: "player_move_requested"; cellIdx: number }
   | { type: "computer_move_requested"; cellIdx: number };
 
@@ -53,6 +54,8 @@ export function reducer(state: GameState, action: GameAction): GameState {
       draft.difficulty = action.difficulty;
       draft.gameStatus = "active";
       break;
+    // case "connect_requested":
+    //   break;
     case "reset_requested":
       return initState();
     default:

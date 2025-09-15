@@ -33,9 +33,14 @@ function DialogWithBackdrop({
 function MainMenuDialogContent() {
   const dispatch = useContext(GameStateDispatchContext);
   const [difficulty, setDifficulty] = useState<Difficulty>('Luck');
+  const [serverUrl, setServerUrl] = useState<string>('ws://localhost:8080');
 
   function onStartClick() {
     dispatch({ type: 'start_requested', gameMode: 'Human-vs-Computer', difficulty });
+  }
+
+  function onConnectClick() {
+    dispatch({ type: 'connect_requested', serverUrl });
   }
 
   return (
@@ -56,8 +61,11 @@ function MainMenuDialogContent() {
         </div>
         <div>
           <h3>Multi Player</h3>
-          <div className="break-all"></div>
-          <button onClick={onStartClick}>Connect to Server</button>
+          <label>
+            Server URL:
+            <input type="url" value={serverUrl} onChange={e => setServerUrl(e.target.value)} />
+          </label>
+          <button onClick={onConnectClick}>Connect to Server</button>
         </div>
       </section>
     </div>
