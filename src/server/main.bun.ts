@@ -1,3 +1,7 @@
+import type { ServerWebSocket } from "bun";
+
+const connectedPlayers: ServerWebSocket<unknown>[] = [];
+
 Bun.serve({
   port: 8080,
 
@@ -14,15 +18,20 @@ Bun.serve({
       console.log('message', message);
     },
     open(ws) {
-      console.log('open');
-      ws.send('hello');
+      // const serverStatus: ServerStatus = {
+      const serverStatus = {
+        connectedPlayersCount: connectedPlayers.length,
+        activeGamesCount: 0,
+      };
+      connectedPlayers.push(ws);
+      
+      ws.send(JSON.stringify(serverStatus));
     },
     close(ws, _code, _message) {
-      console.log('close');
-      ws.send('bye');
+      const idx = connectedPlayers.indexOf(ws);
+      if (idx !== -1) connectedPlayers.splice(idx, 1);
     },
     drain(_ws) {
-      console.log('drain');
     },
   },
 });

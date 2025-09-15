@@ -19,6 +19,7 @@ function initActiveGameState(board: Board, nextTurn: GameState["nextTurn"], game
     board,
     gameMode,
     gameStatus: "active",
+    difficulty: "Luck",
     nextTurn,
   };
 }

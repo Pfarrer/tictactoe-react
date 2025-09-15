@@ -1,6 +1,11 @@
 import { create } from "mutative";
 import { hasWinner } from "./hasWinner";
 
+export interface ServerStatus {
+  connectedPlayersCount: number;
+  activeGamesCount: number;
+}
+
 export type GameMode = "Human-vs-Computer";
 export type GameStatus = "pristine" | "active" | "finished";
 

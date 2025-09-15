@@ -13,9 +13,9 @@ export function ComputerPlayer() {
         if (gameState.difficulty === "Luck") {
             move = findRandomMove(gameState.board) || -1;
         } else if (gameState.difficulty === "Simple") {
-            move = findBestMove(gameState.board, 1);
+            move = findBestMove(gameState.board, "computer", 1);
         } else {
-            move = findBestMove(gameState.board, -1);
+            move = findBestMove(gameState.board, "computer", -1);
         }
 
         if (move !== -1) {

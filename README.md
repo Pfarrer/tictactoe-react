@@ -8,3 +8,4 @@ This project aims to provide a sandbox environment to personally learn and explo
 * Konva (HTML5 Canvas library)
 * WebSockets
 * Bun, Vite, Vitest
+* Workspaces and Multi-Module Monorepo
