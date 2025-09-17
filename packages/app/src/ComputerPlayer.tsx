@@ -4,34 +4,37 @@ import { findBestMove } from "./core/minimax";
 import type { Board } from "@tic-tac-toe/shared/state";
 
 export function ComputerPlayer() {
-    const gameState = useContext(GameStateContext);
-    const dispatch = useContext(GameStateDispatchContext);
+  const gameState = useContext(GameStateContext);
+  const dispatch = useContext(GameStateDispatchContext);
 
-    if (gameState.gameStatus !== "finished" && gameState.nextTurn === "computer") {
-        let move = -1;
+  if (
+    gameState.gameStatus !== "finished" &&
+    gameState.nextTurn === "computer"
+  ) {
+    let move = -1;
 
-        if (gameState.difficulty === "Luck") {
-            move = findRandomMove(gameState.board) || -1;
-        } else if (gameState.difficulty === "Simple") {
-            move = findBestMove(gameState.board, "computer", 1);
-        } else {
-            move = findBestMove(gameState.board, "computer", -1);
-        }
-
-        if (move !== -1) {
-            dispatch({ type: "computer_move_requested", cellIdx: move });
-        }
+    if (gameState.difficulty === "Luck") {
+      move = findRandomMove(gameState.board) || -1;
+    } else if (gameState.difficulty === "Simple") {
+      move = findBestMove(gameState.board, "computer", 1);
+    } else {
+      move = findBestMove(gameState.board, "computer", -1);
     }
-    
-    return <></>;
+
+    if (move !== -1) {
+      dispatch({ type: "computer_move_requested", cellIdx: move });
+    }
+  }
+
+  return <></>;
 }
 
 function findRandomMove(board: Board): number | null {
-    for (let i=0;i<1000;i++) {
-        const idx = Math.round(Math.random() * 8);
-        if (board[idx] === " ") {
-            return idx;
-        }
+  for (let i = 0; i < 1000; i++) {
+    const idx = Math.round(Math.random() * 8);
+    if (board[idx] === " ") {
+      return idx;
     }
-    return null;
+  }
+  return null;
 }

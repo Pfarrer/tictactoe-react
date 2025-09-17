@@ -10,7 +10,5 @@
       "types": "./src/state.ts"
     }
   },
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }

@@ -9,14 +9,14 @@ import { MenuDialog } from "./MenuDialog";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initState());
-  
+
   return (
     <GameStateContext value={state}>
       <GameStateDispatchContext value={dispatch}>
         <GameStage>
           <Cells />
           <Grid />
-          </GameStage>
+        </GameStage>
         <MenuDialog />
         <ComputerPlayer />
       </GameStateDispatchContext>

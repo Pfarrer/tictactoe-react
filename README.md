@@ -2,10 +2,10 @@
 
 This project aims to provide a sandbox environment to personally learn and explore some technologies:
 
-* React & React testing
-* State Management (Redux)
-* State Synchronization (Event Sourcing)
-* Konva (HTML5 Canvas library)
-* WebSockets
-* Bun, Vite, Vitest
-* Workspaces and Multi-Module Monorepo
+- React & React testing
+- State Management (Redux)
+- State Synchronization (Event Sourcing)
+- Konva (HTML5 Canvas library)
+- WebSockets
+- Bun, Vite, Vitest
+- Workspaces and Multi-Module Monorepo

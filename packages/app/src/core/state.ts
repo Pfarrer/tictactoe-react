@@ -12,16 +12,24 @@ export const initState: () => GameState = () => ({
 
 export function reducer(state: GameState, action: GameAction): GameState {
   const [draft, finalize] = create(state);
-  
+
   switch (action.type) {
     case "player_move_requested":
-      if (draft.gameStatus === "active" && draft.nextTurn === "human" && draft.board[action.cellIdx] === " ") {
+      if (
+        draft.gameStatus === "active" &&
+        draft.nextTurn === "human" &&
+        draft.board[action.cellIdx] === " "
+      ) {
         draft.board[action.cellIdx] = "x";
         draft.nextTurn = "computer";
       }
       break;
     case "computer_move_requested":
-      if (draft.gameStatus === "active" && draft.nextTurn === "computer" && draft.board[action.cellIdx] === " ") {
+      if (
+        draft.gameStatus === "active" &&
+        draft.nextTurn === "computer" &&
+        draft.board[action.cellIdx] === " "
+      ) {
         draft.board[action.cellIdx] = "o";
         draft.nextTurn = "human";
       }
@@ -53,7 +61,7 @@ function updateGameStatus(draft: GameState) {
     draft.winner = winner;
     draft.gameStatus = "finished";
   } else {
-    const hasEmptyCell = draft.board.find(cell => cell === " ") !== undefined;
+    const hasEmptyCell = draft.board.find((cell) => cell === " ") !== undefined;
     if (!hasEmptyCell) {
       delete draft.winner;
       draft.gameStatus = "finished";

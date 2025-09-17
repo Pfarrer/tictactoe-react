@@ -1,6 +1,6 @@
-import { Stage } from 'react-konva';
-import { STAGE_SIZE } from './constants';
-import { useLayoutEffect, useState, type JSX } from 'react';
+import { Stage } from "react-konva";
+import { STAGE_SIZE } from "./constants";
+import { useLayoutEffect, useState, type JSX } from "react";
 
 export function GameStage({
   children,
@@ -15,14 +15,14 @@ export function GameStage({
       height={windowSize.height}
       scaleX={windowSize.width / STAGE_SIZE}
       scaleY={windowSize.height / STAGE_SIZE}
-      style={{ background: 'var(--color-emerald-100)' }}
+      style={{ background: "var(--color-emerald-100)" }}
     >
       {children}
     </Stage>
   );
 }
 
-function useWindowSize():{
+function useWindowSize(): {
   width: number;
   height: number;
 } {

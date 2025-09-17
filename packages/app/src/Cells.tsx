@@ -1,22 +1,22 @@
-import type Konva from 'konva';
-import { useContext, useRef } from 'react';
-import { Circle, Group, Layer, Line, Rect } from 'react-konva';
-import { BOARD_PADDING, CELL_SIZE } from './constants';
-import { GameStateContext, GameStateDispatchContext } from './GameStateConext';
-import type { BoardCellValue } from '@tic-tac-toe/shared/state';
+import type Konva from "konva";
+import { useContext, useRef } from "react";
+import { Circle, Group, Layer, Line, Rect } from "react-konva";
+import { BOARD_PADDING, CELL_SIZE } from "./constants";
+import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
+import type { BoardCellValue } from "@tic-tac-toe/shared/state";
 
 export function Cells() {
   const gameState = useContext(GameStateContext);
   const dispatch = useContext(GameStateDispatchContext);
 
   const onCellClick = (idx: number) => {
-    dispatch({ type: 'player_move_requested', cellIdx: idx });
+    dispatch({ type: "player_move_requested", cellIdx: idx });
   };
 
   return (
     <Layer
       listening={
-        gameState.gameStatus === 'active' && gameState.nextTurn === 'human'
+        gameState.gameStatus === "active" && gameState.nextTurn === "human"
       }
     >
       {gameState.board.map((cellState: BoardCellValue, idx: number) => (
@@ -34,20 +34,20 @@ export function Cells() {
   );
 }
 
-const CELL_COLOR_DEFAULT = 'white';
-const CELL_COLOR_HOVER = 'gray';
+const CELL_COLOR_DEFAULT = "white";
+const CELL_COLOR_HOVER = "gray";
 
 export function Cell({ cellState }: { cellState: BoardCellValue }) {
   const state = useContext(GameStateContext);
   const rectRef = useRef<Konva.Rect>(null as never);
 
   function cellFillColor() {
-    const isClickable = cellState === ' ' && state.gameStatus === 'active';
-    return isClickable ? CELL_COLOR_DEFAULT : 'transparent';
+    const isClickable = cellState === " " && state.gameStatus === "active";
+    return isClickable ? CELL_COLOR_DEFAULT : "transparent";
   }
 
   const onHover = (isHovered: boolean) => {
-    if (cellState !== ' ') return;
+    if (cellState !== " ") return;
 
     rectRef.current.to({
       fill: isHovered ? CELL_COLOR_HOVER : CELL_COLOR_DEFAULT,
@@ -65,8 +65,8 @@ export function Cell({ cellState }: { cellState: BoardCellValue }) {
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}
       />
-      {cellState === 'o' && <ComputerCellMark />}
-      {cellState === 'x' && <HumanCellMark />}
+      {cellState === "o" && <ComputerCellMark />}
+      {cellState === "x" && <HumanCellMark />}
     </>
   );
 }
@@ -78,7 +78,7 @@ function ComputerCellMark() {
       y={CELL_SIZE / 2}
       radius={CELL_SIZE / 4}
       strokeWidth={0.7}
-      stroke={'red'}
+      stroke={"red"}
     />
   );
 }
@@ -94,7 +94,7 @@ function HumanCellMark() {
           (3 * CELL_SIZE) / 4,
         ]}
         strokeWidth={0.7}
-        stroke={'black'}
+        stroke={"black"}
       />
       <Line
         points={[
@@ -104,7 +104,7 @@ function HumanCellMark() {
           (3 * CELL_SIZE) / 4,
         ]}
         strokeWidth={0.7}
-        stroke={'black'}
+        stroke={"black"}
       />
     </>
   );

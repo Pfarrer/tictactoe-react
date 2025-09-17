@@ -22,7 +22,7 @@ export interface GameState {
 
 export type GameAction =
   | { type: "reset_requested" }
-  | { type: "start_requested"; gameMode: GameMode, difficulty: Difficulty }
+  | { type: "start_requested"; gameMode: GameMode; difficulty: Difficulty }
   | { type: "connect_requested"; serverUrl: string }
   | { type: "player_move_requested"; cellIdx: number }
   | { type: "computer_move_requested"; cellIdx: number };
