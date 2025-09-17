@@ -1,0 +1,16 @@
+{
+  "name": "@tic-tac-toe/shared",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "src/state.ts",
+  "types": "src/state.ts",
+  "exports": {
+    "./state": {
+      "import": "./src/state.ts",
+      "types": "./src/state.ts"
+    }
+  },
+  "dependencies": {
+    
+  }
+}

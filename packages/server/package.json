@@ -1,0 +1,6 @@
+{
+  "name": "@tic-tac-toe/server",
+  "dependencies": {
+    "@tic-tac-toe/shared": "0.0.1"
+  }
+}

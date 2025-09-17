@@ -1,0 +1,6 @@
+{
+  "name": "@tic-tac-toe/app",
+  "dependencies": {
+    "@tic-tac-toe/shared": "*"
+  }
+}
