@@ -10,5 +10,9 @@
     "packages/server",
     "packages/app",
     "packages/shared"
-  ]
+  ],
+  "devDependencies": {
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2"
+  }
 }
