@@ -15,18 +15,23 @@ jobs:
       - run: bun install
       
       - run: bun run lint
-      - run: bun run test
+
+      - name: Run app tests
+        run: bun run test
+        working-directory: ./packages/app
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage
+          path: ./packages/app/coverage
 
-      - run: bun run build
+      - name: Build app
+        run: bun run build
+        working-directory: ./packages/app
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist/
+          path: ./packages/app/dist/
 
   deploy:
     runs-on: ubuntu-latest
