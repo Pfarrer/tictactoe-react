@@ -1,8 +1,8 @@
 import type Konva from "konva";
 import { useContext, useRef } from "react";
 import { Circle, Group, Layer, Line, Rect } from "react-konva";
-import { BOARD_PADDING, CELL_SIZE } from "./constants";
-import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
+import { BOARD_PADDING, CELL_SIZE } from "../../constants";
+import { GameStateContext, GameStateDispatchContext } from "../../GameStateConext";
 import type { BoardCellValue } from "@tic-tac-toe/shared/state";
 
 export function Cells() {
