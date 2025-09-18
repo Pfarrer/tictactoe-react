@@ -1,8 +1,9 @@
+import { describe, expect, it } from "vitest";
 import { findBestMove } from "./minimax";
-import type { Board } from "@tic-tac-toe/shared/state";
+import type { BoardCells } from "../../types";
 
 describe("minimax", () => {
-  const board = ["o", "o", " ", "x", " ", " ", " ", " ", " "] as Board;
+  const board = ["o", "o", " ", "x", " ", " ", " ", " ", " "] as BoardCells;
 
   it("should return the winning move", () => {
     const move = findBestMove(board, "computer");

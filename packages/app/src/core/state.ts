@@ -1,6 +1,22 @@
+import { hasWinner } from "@tic-tac-toe/shared/core";
+import type { BoardCells, Difficulty, GameMode, GameStatus, PlayerType } from "@tic-tac-toe/shared/types";
 import { create } from "mutative";
-import { hasWinner } from "./hasWinner";
-import type { GameAction, GameState } from "@tic-tac-toe/shared/state";
+
+export interface GameState {
+  board: BoardCells;
+  difficulty: Difficulty;
+  gameMode: GameMode;
+  gameStatus: GameStatus;
+  nextTurn: PlayerType;
+  winner?: PlayerType;
+}
+
+export type GameAction =
+  | { type: "reset_requested" }
+  | { type: "start_requested"; gameMode: GameMode; difficulty: Difficulty }
+  | { type: "connect_requested"; serverUrl: string }
+  | { type: "player_move_requested"; cellIdx: number }
+  | { type: "computer_move_requested"; cellIdx: number };
 
 export const initState: () => GameState = () => ({
   board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -15,21 +31,13 @@ export function reducer(state: GameState, action: GameAction): GameState {
 
   switch (action.type) {
     case "player_move_requested":
-      if (
-        draft.gameStatus === "active" &&
-        draft.nextTurn === "human" &&
-        draft.board[action.cellIdx] === " "
-      ) {
+      if (draft.gameStatus === "active" && draft.nextTurn === "human" && draft.board[action.cellIdx] === " ") {
         draft.board[action.cellIdx] = "x";
         draft.nextTurn = "computer";
       }
       break;
     case "computer_move_requested":
-      if (
-        draft.gameStatus === "active" &&
-        draft.nextTurn === "computer" &&
-        draft.board[action.cellIdx] === " "
-      ) {
+      if (draft.gameStatus === "active" && draft.nextTurn === "computer" && draft.board[action.cellIdx] === " ") {
         draft.board[action.cellIdx] = "o";
         draft.nextTurn = "human";
       }

@@ -15,11 +15,7 @@ export function MenuDialog() {
   );
 }
 
-function DialogWithBackdrop({
-  children,
-}: {
-  children: ReactNode | ReactNode[];
-}) {
+function DialogWithBackdrop({ children }: { children: ReactNode | ReactNode[] }) {
   return (
     <dialog
       open
@@ -55,11 +51,7 @@ function MainMenuDialogContent() {
           <h3>Single Player</h3>
           <label>
             Difficulty:
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="block"
-            >
+            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)} className="block">
               <option value="Luck">Luck (random moves only)</option>
               <option value="Simple">Simple (planning 1 step ahead)</option>
               <option value="Hard">Hard (planning all steps ahead)</option>
@@ -71,12 +63,7 @@ function MainMenuDialogContent() {
           <h3>Multi Player</h3>
           <label>
             Server URL:
-            <input
-              type="url"
-              value={serverUrl}
-              onChange={(e) => setServerUrl(e.target.value)}
-              className="block"
-            />
+            <input type="url" value={serverUrl} onChange={(e) => setServerUrl(e.target.value)} className="block" />
           </label>
           <div className="break-all"></div>
           <button onClick={onConnectClick}>Connect to Server</button>

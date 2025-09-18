@@ -5,10 +5,24 @@
   "main": "src/state.ts",
   "types": "src/state.ts",
   "exports": {
-    "./state": {
-      "import": "./src/state.ts",
-      "types": "./src/state.ts"
+    "./algorithms": {
+      "import": "./src/algorithms/index.ts",
+      "types": "./src/algorithms/index.ts"
+    },
+    "./core": {
+      "import": "./src/core/index.ts",
+      "types": "./src/core/index.ts"
+    },
+    "./types": {
+      "import": "./src/types/index.ts",
+      "types": "./src/types/index.ts"
     }
   },
-  "dependencies": {}
+  "scripts": {
+    "test": "vitest --coverage"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
 }

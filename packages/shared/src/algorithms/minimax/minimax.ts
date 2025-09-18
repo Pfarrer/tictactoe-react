@@ -1,12 +1,8 @@
-import type { Board } from "@tic-tac-toe/shared/state";
-import { hasWinner } from "./hasWinner";
+import { hasWinner } from "../../core";
+import type { BoardCells, PlayerType } from "../../types";
 
-export function findBestMove(
-  board: Board,
-  nextMove: "human" | "computer",
-  maxDepth: number = -1,
-): number {
-  const board_ = [...board] as Board;
+export function findBestMove(board: BoardCells, nextMove: PlayerType, maxDepth: number = -1): number {
+  const board_ = [...board] as BoardCells;
 
   let bestScore = -Infinity;
   let move = -1;
@@ -25,12 +21,7 @@ export function findBestMove(
   return move;
 }
 
-function minimax(
-  board: Board,
-  depth: number,
-  isMaximizing: boolean,
-  maxDepth: number,
-): number {
+function minimax(board: BoardCells, depth: number, isMaximizing: boolean, maxDepth: number): number {
   if (maxDepth !== -1 && depth > maxDepth) {
     return 0;
   }

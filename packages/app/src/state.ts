@@ -12,11 +12,7 @@ export const useStore = create<GameState & Actions>()(
 
     playerMoveRequested: (cellIdx: number) =>
       set((state) => {
-        if (
-          state.gameStatus === "active" &&
-          state.nextTurn === "human" &&
-          state.board[cellIdx] === " "
-        ) {
+        if (state.gameStatus === "active" && state.nextTurn === "human" && state.board[cellIdx] === " ") {
           state.board[cellIdx] = "x";
           state.nextTurn = "computer";
         }

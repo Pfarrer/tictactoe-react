@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { hasWinner } from "./hasWinner";
-import type { Board } from "@tic-tac-toe/shared/state";
+import type { BoardCells } from "../../types";
 
 describe("hasWinner", () => {
   it("finds no winner on an empty board", () => {
@@ -38,11 +38,11 @@ describe("hasWinner", () => {
   });
 
   it("finds winner diagonally in real board", () => {
-    const board: Board = ["x", "o", "o", "o", "x", "x", "x", "o", "x"];
+    const board: BoardCells = ["x", "o", "o", "o", "x", "x", "x", "o", "x"];
     expect(hasWinner(board)).toBe("human");
   });
 });
 
-function parseBoard(row1: string, row2: string, row3: string): Board {
-  return row1.split("").concat(row2.split("")).concat(row3.split("")) as Board;
+function parseBoard(row1: string, row2: string, row3: string): BoardCells {
+  return row1.split("").concat(row2.split("")).concat(row3.split("")) as BoardCells;
 }

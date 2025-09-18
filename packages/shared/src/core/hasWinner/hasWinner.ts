@@ -1,8 +1,8 @@
-import type { BoardCellValue, GameState } from "@tic-tac-toe/shared/state";
+import type { BoardCells, BoardCell, PlayerType } from "../../types/fundamental";
 
 const DIMENSIONS = 3;
 
-export function hasWinner(board: GameState["board"]): GameState["winner"] {
+export function hasWinner(board: BoardCells): PlayerType | undefined {
   const victoriousCellValue = findVictoriousCellValue(board);
   if (victoriousCellValue) {
     return victoriousCellValue === "x" ? "human" : "computer";
@@ -11,28 +11,18 @@ export function hasWinner(board: GameState["board"]): GameState["winner"] {
   }
 }
 
-function findVictoriousCellValue(
-  b: GameState["board"],
-): undefined | BoardCellValue {
+function findVictoriousCellValue(b: BoardCells): undefined | BoardCell {
   // Check horizontally
   for (let row = 0; row < DIMENSIONS; row++) {
     const offset = DIMENSIONS * row;
-    if (
-      b[offset + 0] !== " " &&
-      b[offset + 0] == b[offset + 1] &&
-      b[offset + 1] == b[offset + 2]
-    ) {
+    if (b[offset + 0] !== " " && b[offset + 0] == b[offset + 1] && b[offset + 1] == b[offset + 2]) {
       return b[offset + 0];
     }
   }
 
   // Check vertically
   for (let column = 0; column < DIMENSIONS; column++) {
-    if (
-      b[0 + column] !== " " &&
-      b[0 + column] == b[3 + column] &&
-      b[3 + column] == b[6 + column]
-    ) {
+    if (b[0 + column] !== " " && b[0 + column] == b[3 + column] && b[3 + column] == b[6 + column]) {
       return b[0 + column];
     }
   }

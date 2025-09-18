@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { hasWinner } from "./hasWinner";
 import { reducer } from "./state";
-import type { Board, GameMode, GameState } from "@tic-tac-toe/shared/state";
+import { hasWinner } from "@tic-tac-toe/shared/core";
+import type { BoardCells, GameMode, GameState, PlayerType } from "@tic-tac-toe/shared/types";
 
 describe("state", () => {
   it("game finsihed when there are no empty cells left", () => {
@@ -19,8 +19,8 @@ describe("state", () => {
 });
 
 function initActiveGameState(
-  board: Board,
-  nextTurn: GameState["nextTurn"],
+  board: BoardCells,
+  nextTurn: PlayerType,
   gameMode: GameMode = "Human-vs-Computer",
 ): GameState {
   return {
@@ -32,6 +32,6 @@ function initActiveGameState(
   };
 }
 
-function parseBoard(row1: string, row2: string, row3: string): Board {
-  return row1.split("").concat(row2.split("")).concat(row3.split("")) as Board;
+function parseBoard(row1: string, row2: string, row3: string): BoardCells {
+  return row1.split("").concat(row2.split("")).concat(row3.split("")) as BoardCells;
 }

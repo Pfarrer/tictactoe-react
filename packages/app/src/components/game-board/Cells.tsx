@@ -14,11 +14,7 @@ export function Cells() {
   };
 
   return (
-    <Layer
-      listening={
-        gameState.gameStatus === "active" && gameState.nextTurn === "human"
-      }
-    >
+    <Layer listening={gameState.gameStatus === "active" && gameState.nextTurn === "human"}>
       {gameState.board.map((cellState: BoardCellValue, idx: number) => (
         <Group
           key={idx}
@@ -72,37 +68,19 @@ export function Cell({ cellState }: { cellState: BoardCellValue }) {
 }
 
 function ComputerCellMark() {
-  return (
-    <Circle
-      x={CELL_SIZE / 2}
-      y={CELL_SIZE / 2}
-      radius={CELL_SIZE / 4}
-      strokeWidth={0.7}
-      stroke={"red"}
-    />
-  );
+  return <Circle x={CELL_SIZE / 2} y={CELL_SIZE / 2} radius={CELL_SIZE / 4} strokeWidth={0.7} stroke={"red"} />;
 }
 
 function HumanCellMark() {
   return (
     <>
       <Line
-        points={[
-          CELL_SIZE / 4,
-          CELL_SIZE / 4,
-          (3 * CELL_SIZE) / 4,
-          (3 * CELL_SIZE) / 4,
-        ]}
+        points={[CELL_SIZE / 4, CELL_SIZE / 4, (3 * CELL_SIZE) / 4, (3 * CELL_SIZE) / 4]}
         strokeWidth={0.7}
         stroke={"black"}
       />
       <Line
-        points={[
-          (3 * CELL_SIZE) / 4,
-          CELL_SIZE / 4,
-          CELL_SIZE / 4,
-          (3 * CELL_SIZE) / 4,
-        ]}
+        points={[(3 * CELL_SIZE) / 4, CELL_SIZE / 4, CELL_SIZE / 4, (3 * CELL_SIZE) / 4]}
         strokeWidth={0.7}
         stroke={"black"}
       />
