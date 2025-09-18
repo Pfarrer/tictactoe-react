@@ -1,9 +1,9 @@
 import type Konva from "konva";
 import { useContext, useRef } from "react";
 import { Circle, Group, Layer, Line, Rect } from "react-konva";
-import { BOARD_PADDING, CELL_SIZE } from "../../constants";
-import { GameStateContext, GameStateDispatchContext } from "../../GameStateConext";
-import type { BoardCellValue } from "@tic-tac-toe/shared/state";
+import { BOARD_PADDING, CELL_SIZE } from "#/constants";
+import { GameStateContext, GameStateDispatchContext } from "#/GameStateConext";
+import type { BoardCell } from "@tic-tac-toe/shared/types";
 
 export function Cells() {
   const gameState = useContext(GameStateContext);
@@ -15,7 +15,7 @@ export function Cells() {
 
   return (
     <Layer listening={gameState.gameStatus === "active" && gameState.nextTurn === "human"}>
-      {gameState.board.map((cellState: BoardCellValue, idx: number) => (
+      {gameState.board.map((cellState: BoardCell, idx: number) => (
         <Group
           key={idx}
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
@@ -33,7 +33,7 @@ export function Cells() {
 const CELL_COLOR_DEFAULT = "white";
 const CELL_COLOR_HOVER = "gray";
 
-export function Cell({ cellState }: { cellState: BoardCellValue }) {
+export function Cell({ cellState }: { cellState: BoardCell }) {
   const state = useContext(GameStateContext);
   const rectRef = useRef<Konva.Rect>(null as never);
 

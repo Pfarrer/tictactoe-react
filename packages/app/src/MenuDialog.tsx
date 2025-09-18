@@ -1,6 +1,6 @@
 import { useContext, useState, type ReactNode } from "react";
 import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
-import type { Difficulty } from "@tic-tac-toe/shared/state";
+import type { Difficulty } from "@tic-tac-toe/shared/types";
 
 export function MenuDialog() {
   const { gameStatus } = useContext(GameStateContext);
