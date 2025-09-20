@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { reducer, type GameState } from "./state";
 import { hasWinner } from "@tic-tac-toe/shared/core";
 import type { BoardCells, GameMode, PlayerType } from "@tic-tac-toe/shared/types";

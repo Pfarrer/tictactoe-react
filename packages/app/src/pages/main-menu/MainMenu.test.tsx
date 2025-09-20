@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { fireEvent, render } from "@testing-library/react";
 import { MainMenu } from "./MainMenu";
 
@@ -12,13 +12,13 @@ describe("MainMenu", () => {
     expect(soloTab).toHaveAttribute("aria-selected", "true");
   });
 
-  it.skip("selects online tab when user clicks on it", async () => {
+  it("selects online tab when user clicks on it", async () => {
     const doc = render(<MainMenu />);
 
-    const onlineTab = doc.getByRole("tab", { name: "Online" });
+    const onlineTab = doc.queryByRole("tab", { name: "Online" });
     expect(onlineTab).toHaveAttribute("aria-selected", "false");
 
-    await fireEvent.click(onlineTab);
-    expect(doc.getByRole("tab", { name: "Online" })).toHaveAttribute("aria-selected", "true");
+    await fireEvent.click(doc.getByText("Online"));
+    expect(onlineTab).toHaveAttribute("aria-selected", "true");
   });
 });

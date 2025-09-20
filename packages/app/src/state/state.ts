@@ -5,7 +5,7 @@ import { mutative } from "zustand-mutative";
 import { create as mutativeCreate } from "mutative";
 import { type MainMenuTab, type AppPage, MainMenuTabValues, AppPageValues } from "./types";
 import { requireValidType } from "./utils";
-import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
+import { MAIN_MENU_SERVER_URL_DEFAULT } from "#/constants.ts";
 
 type State = {
   activePage: AppPage;
@@ -13,6 +13,9 @@ type State = {
   mainMenu: {
     selectedTab: MainMenuTab;
     serverUrl: string;
+  };
+  gameSession: {
+    status: "active";
   };
 };
 
@@ -40,6 +43,10 @@ export const useStateStore = create<State & Actions>()(
       setServerUrl: (url) => set((state) => {
           state.mainMenu.serverUrl = url;
       }),
+    },
+
+    gameSession: {
+      status: "active",
     },
 
     boardCells: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
