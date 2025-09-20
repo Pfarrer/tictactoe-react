@@ -1,10 +1,10 @@
-import type { ServerStatus } from "@tic-tac-toe/shared/state";
+import type { ServerStatus } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
 
 const connectedPlayers: ServerWebSocket<unknown>[] = [];
 
 Bun.serve({
-  port: 8080,
+  port: 4680,
 
   fetch(req, server) {
     // Upgrade the request to a WebSocket

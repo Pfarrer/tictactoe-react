@@ -1,17 +1,17 @@
 import { useContext, useState, type ReactNode } from "react";
-import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
 import type { Difficulty } from "@tic-tac-toe/shared/types";
 
 export function MenuDialog() {
-  const { gameStatus } = useContext(GameStateContext);
+  // const { gameStatus } = useContext(GameStateContext);
 
   return (
-    gameStatus !== "active" && (
-      <DialogWithBackdrop>
-        {gameStatus === "pristine" && <MainMenuDialogContent />}
-        {gameStatus === "finished" && <GameFinishedDialogContent />}
-      </DialogWithBackdrop>
-    )
+    // gameStatus !== "active" && (
+    //   <DialogWithBackdrop>
+    //     {gameStatus === "pristine" && <MainMenuDialogContent />}
+    //     {gameStatus === "finished" && <GameFinishedDialogContent />}
+    //   </DialogWithBackdrop>
+    // )
+    ""
   );
 }
 
@@ -27,20 +27,20 @@ function DialogWithBackdrop({ children }: { children: ReactNode | ReactNode[] })
 }
 
 function MainMenuDialogContent() {
-  const dispatch = useContext(GameStateDispatchContext);
+  // const dispatch = useContext(GameStateDispatchContext);
   const [difficulty, setDifficulty] = useState<Difficulty>("Luck");
   const [serverUrl, setServerUrl] = useState<string>("ws://localhost:8080");
 
   function onStartClick() {
-    dispatch({
-      type: "start_requested",
-      gameMode: "Human-vs-Computer",
-      difficulty,
-    });
+    // dispatch({
+    //   type: "start_requested",
+    //   gameMode: "Human-vs-Computer",
+    //   difficulty,
+    // });
   }
 
   function onConnectClick() {
-    dispatch({ type: "connect_requested", serverUrl });
+    // dispatch({ type: "connect_requested", serverUrl });
   }
 
   return (

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 function Root({ children }: Children) {
   return (
-    <ul className="flex flex-wrap text-md font-medium text-center text-inactive border-b-1 border-inactive">
+    <ul role="tablist" className="flex flex-wrap mb-4 text-md font-medium text-center text-inactive border-b-1 border-inactive">
       {children}
     </ul>
   );
@@ -17,7 +17,7 @@ type ItemProps = {
 
 function Item({ icon, active, onActivate, children }: ItemProps) {
   return (
-    <li className="me-2">
+    <li role="tab" className="me-2" aria-selected={active}>
       <a
         href="#"
         data-variant={active ? 'active' : 'default'}

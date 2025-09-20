@@ -5,13 +5,15 @@ import { mutative } from "zustand-mutative";
 import { create as mutativeCreate } from "mutative";
 import { type MainMenuTab, type AppPage, MainMenuTabValues, AppPageValues } from "./types";
 import { requireValidType } from "./utils";
+import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
 
 type State = {
   activePage: AppPage;
   boardCells: BoardCells;
   mainMenu: {
-    selectedTab: MainMenuTab,
-  },
+    selectedTab: MainMenuTab;
+    serverUrl: string;
+  };
 };
 
 type Actions = {
@@ -19,7 +21,8 @@ type Actions = {
 
   mainMenu: {
     selectTab(name: string): void;
-  }
+    setServerUrl(url: string): void;
+  };
 };
 
 export const useStateStore = create<State & Actions>()(
@@ -28,9 +31,14 @@ export const useStateStore = create<State & Actions>()(
 
     mainMenu: {
       selectedTab: MainMenuTabValues[0],
+      serverUrl: MAIN_MENU_SERVER_URL_DEFAULT,
 
       selectTab: (name) => set((state) => {
           state.mainMenu.selectedTab = requireValidType(name, MainMenuTabValues);
+      }),
+
+      setServerUrl: (url) => set((state) => {
+          state.mainMenu.serverUrl = url;
       }),
     },
 
