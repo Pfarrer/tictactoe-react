@@ -34,8 +34,7 @@ export function Cells() {
 const CELL_COLOR_DEFAULT = "white";
 const CELL_COLOR_HOVER = "gray";
 
-export function Cell({ cellState }: { cellState: BoardCell }) {
-  const state = useContext(GameStateContext);
+export function Cell({ cellState, isClickable }: { cellState: BoardCell; isClickable: boolean }) {
   const rectRef = useRef<Konva.Rect>(null as never);
 
   function cellFillColor() {

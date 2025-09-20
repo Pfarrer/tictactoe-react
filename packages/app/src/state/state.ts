@@ -33,27 +33,28 @@ export const useStateStore = create<State & Actions>()(
       selectedTab: MainMenuTabValues[0],
       serverUrl: MAIN_MENU_SERVER_URL_DEFAULT,
 
-      selectTab: (name) => set((state) => {
+      selectTab: (name) =>
+        set((state) => {
           state.mainMenu.selectedTab = requireValidType(name, MainMenuTabValues);
-      }),
+        }),
 
-      setServerUrl: (url) => set((state) => {
+      setServerUrl: (url) =>
+        set((state) => {
           state.mainMenu.serverUrl = url;
-      }),
+        }),
     },
 
     boardCells: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-    setBoardCells: (boardCells) => set((state) => {
-      state.boardCells = boardCells;
-    }),
-  }))
+    setBoardCells: (boardCells) =>
+      set((state) => {
+        state.boardCells = boardCells;
+      }),
+  })),
 );
-
 
 ///////////////
 // Old State
 ///////////////
-
 
 export interface GameState {
   board: BoardCells;

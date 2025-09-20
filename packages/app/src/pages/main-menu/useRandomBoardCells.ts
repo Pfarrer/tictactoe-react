@@ -5,7 +5,7 @@ import type { BoardCells } from "@tic-tac-toe/shared/types";
 import { useEffect } from "react";
 
 export function useRandomBoardCells() {
-  const setBoardCells = useStateStore(state => state.setBoardCells);
+  const setBoardCells = useStateStore((state) => state.setBoardCells);
 
   useEffect(() => {
     setBoardCells(makeRandomBoardCells());
@@ -15,14 +15,14 @@ export function useRandomBoardCells() {
     }, MAIN_MENU_RANDOM_BOARD_CELLS_REFRESH_MS);
 
     return () => clearInterval(intervalId);
-  }, []);
+  });
 }
 
 function makeRandomBoardCells(): BoardCells {
   const boardCells = new Array(9).fill(" ") as BoardCells;
-  for (let i=0; i<Math.random()*2+1; i++) {
-    boardCells[findMoveRandom(boardCells)!] = 'x';
-    boardCells[findMoveRandom(boardCells)!] = 'o';
+  for (let i = 0; i < Math.random() * 2 + 1; i++) {
+    boardCells[findMoveRandom(boardCells)!] = "x";
+    boardCells[findMoveRandom(boardCells)!] = "o";
   }
   return boardCells;
 }

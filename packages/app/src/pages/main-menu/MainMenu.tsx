@@ -1,19 +1,20 @@
 import { useStateStore } from "#state/state.ts";
 import { useRandomBoardCells } from "./useRandomBoardCells";
-import { Dialog } from "#components/Dialog.tsx";
-import { Tabs } from "#components/Tabs.tsx";
+import { DialogDescription, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
 import { FaUserGroup, FaUserNinja, FaWifi } from "react-icons/fa6";
 import { Input } from "#components/Input.tsx";
+import { Button } from "#components/Button.tsx";
+import { TabsContent, TabsItem, TabsRoot } from "#components/Tabs.tsx";
 
 export function MainMenu() {
   useRandomBoardCells();
 
   return (
-    <Dialog.Root>
-      <Dialog.Title>TicTacToe</Dialog.Title>
-      <Dialog.Description>Classic TicTacToe game.</Dialog.Description>
+    <DialogRoot>
+      <DialogTitle>TicTacToe</DialogTitle>
+      <DialogDescription>Classic TicTacToe game.</DialogDescription>
       <GameSettingsTabs />
-    </Dialog.Root>
+    </DialogRoot>
   );
 }
 
@@ -23,30 +24,36 @@ function GameSettingsTabs() {
 
   return (
     <>
-      <Tabs.Root>
-        <Tabs.Item icon={<FaUserNinja />} active={selectedTab === 'solo'} onActivate={() => selectTab("solo")}>
+      <TabsRoot>
+        <TabsItem icon={<FaUserNinja />} active={selectedTab === "solo"} onActivate={() => selectTab("solo")}>
           Solo
-        </Tabs.Item>
-        <Tabs.Item icon={<FaUserGroup />} active={selectedTab === 'hotseat'} onActivate={() => selectTab("hotseat")}>
+        </TabsItem>
+        <TabsItem icon={<FaUserGroup />} active={selectedTab === "hotseat"} onActivate={() => selectTab("hotseat")}>
           Hotseat
-        </Tabs.Item>
-        <Tabs.Item icon={<FaWifi />} active={selectedTab === 'online'} onActivate={() => selectTab("online")}>
+        </TabsItem>
+        <TabsItem icon={<FaWifi />} active={selectedTab === "online"} onActivate={() => selectTab("online")}>
           Online
-        </Tabs.Item>
-      </Tabs.Root>
+        </TabsItem>
+      </TabsRoot>
 
-      {selectedTab === 'solo' && <Tabs.Content>
-        <p>Play against the computer.</p>
-        <GameSettingsSolo />
-      </Tabs.Content>}
-      {selectedTab === 'hotseat' && <Tabs.Content>
-        <p>Take turns playing against another person.</p>
-        <GameSettingsHotseat />
-      </Tabs.Content>}
-      {selectedTab === 'online' && <Tabs.Content>
-        <p>Play online against other people.</p>
-        <GameSettingsOnline />
-      </Tabs.Content>}
+      {selectedTab === "solo" && (
+        <TabsContent>
+          <p>Play against the computer.</p>
+          <GameSettingsSolo />
+        </TabsContent>
+      )}
+      {selectedTab === "hotseat" && (
+        <TabsContent>
+          <p>Take turns playing against another person.</p>
+          <GameSettingsHotseat />
+        </TabsContent>
+      )}
+      {selectedTab === "online" && (
+        <TabsContent>
+          <p>Play online against other people.</p>
+          <GameSettingsOnline />
+        </TabsContent>
+      )}
     </>
   );
 }
@@ -60,10 +67,13 @@ function GameSettingsHotseat() {
 }
 
 function GameSettingsOnline() {
-  const serverUrl = useStateStore(state => state.mainMenu.serverUrl);
-  const setServerUrl = useStateStore(state => state.mainMenu.setServerUrl);
+  const serverUrl = useStateStore((state) => state.mainMenu.serverUrl);
+  const setServerUrl = useStateStore((state) => state.mainMenu.setServerUrl);
 
   return (
-    <Input label="Server Url" value={serverUrl} onChange={setServerUrl} />
+    <div className="flex flex-col">
+      <Input label="Server Url" value={serverUrl} onChange={setServerUrl} />
+      <Button>Connect</Button>
+    </div>
   );
 }

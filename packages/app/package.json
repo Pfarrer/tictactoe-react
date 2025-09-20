@@ -11,7 +11,6 @@
     "#*": "./src/*"
   },
   "dependencies": {
-    "@radix-ui/themes": "^3.2.1",
     "@tic-tac-toe/shared": "*",
     "konva": "^10.0.2",
     "mutative": "^1.2.0",
