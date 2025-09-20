@@ -2,20 +2,21 @@ import type Konva from "konva";
 import { useContext, useRef } from "react";
 import { Circle, Group, Layer, Line, Rect } from "react-konva";
 import { BOARD_PADDING, CELL_SIZE } from "#/constants";
-import { GameStateContext, GameStateDispatchContext } from "#/GameStateConext";
+import { GameStateContext } from "#/GameStateConext";
 import type { BoardCell } from "@tic-tac-toe/shared/types";
+import { useStateStore } from "#state/state.ts";
 
 export function Cells() {
-  const gameState = useContext(GameStateContext);
-  const dispatch = useContext(GameStateDispatchContext);
+  const boardCells = useStateStore((state) => state.boardCells);
 
   const onCellClick = (idx: number) => {
-    dispatch({ type: "player_move_requested", cellIdx: idx });
+    // dispatch({ type: "player_move_requested", cellIdx: idx });
   };
 
   return (
-    <Layer listening={gameState.gameStatus === "active" && gameState.nextTurn === "human"}>
-      {gameState.board.map((cellState: BoardCell, idx: number) => (
+    // <Layer listening={gameState.gameStatus === "active" && gameState.nextTurn === "human"}>
+    <Layer listening={false}>
+      {boardCells.map((cellState: BoardCell, idx: number) => (
         <Group
           key={idx}
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}

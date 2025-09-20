@@ -1,9 +1,8 @@
 import { useReducer } from "react";
-import { ComputerPlayer } from "./ComputerPlayer";
 import { GameStateContext, GameStateDispatchContext } from "./GameStateConext";
-import { initState, reducer } from "./core/state";
-import { MenuDialog } from "./MenuDialog";
+import { initState, reducer } from "#/state/state";
 import { GameBoard } from "./components/game-board";
+import { MainMenu } from "#pages/main-menu/MainMenu.tsx";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initState());
@@ -12,8 +11,7 @@ function App() {
     <GameStateContext value={state}>
       <GameStateDispatchContext value={dispatch}>
         <GameBoard />
-        <MenuDialog />
-        <ComputerPlayer />
+        <MainMenu />
       </GameStateDispatchContext>
     </GameStateContext>
   );

@@ -1,5 +1,5 @@
 import { createContext, type ActionDispatch } from "react";
-import type { GameAction, GameState } from "./core/state";
+import type { AppAction, AppState } from "./core/state";
 
-export const GameStateContext = createContext<GameState>(null!);
-export const GameStateDispatchContext = createContext<ActionDispatch<[action: GameAction]>>(null!);
+export const GameStateContext = createContext<AppState>(null!);
+export const GameStateDispatchContext = createContext<ActionDispatch<[action: AppAction]>>(null!);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { reducer } from "./state";
+import { reducer, type GameState } from "./state";
 import { hasWinner } from "@tic-tac-toe/shared/core";
-import type { BoardCells, GameMode, GameState, PlayerType } from "@tic-tac-toe/shared/types";
+import type { BoardCells, GameMode, PlayerType } from "@tic-tac-toe/shared/types";
 
 describe("state", () => {
   it("game finsihed when there are no empty cells left", () => {
