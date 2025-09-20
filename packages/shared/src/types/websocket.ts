@@ -1,6 +1,9 @@
-export type ServerStatus = {
+export type ServerStatistics = {
   connectedPlayersCount: number;
   activeGamesCount: number;
 };
 
-export type ServerMessages = ServerStatus;
+export type ServerMessage = {
+  name: "statistics";
+  data: ServerStatistics;
+};

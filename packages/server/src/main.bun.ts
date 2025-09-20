@@ -1,4 +1,4 @@
-import type { ServerStatus } from "@tic-tac-toe/shared/types";
+import type { ServerMessage, ServerStatistics } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
 
 const connectedPlayers: ServerWebSocket<unknown>[] = [];
@@ -16,21 +16,31 @@ Bun.serve({
 
   websocket: {
     message(_ws, message) {
-      console.log("message", message);
+      console.log("message received", message);
     },
     open(ws) {
-      const serverStatus: ServerStatus = {
-        connectedPlayersCount: connectedPlayers.length,
-        activeGamesCount: 0,
-      };
       connectedPlayers.push(ws);
-
-      ws.send(JSON.stringify(serverStatus));
+      publishServerStatistics();
     },
     close(ws, _code, _message) {
       const idx = connectedPlayers.indexOf(ws);
       if (idx !== -1) connectedPlayers.splice(idx, 1);
+      publishServerStatistics();
     },
     drain(_ws) {},
   },
 });
+
+function publishServerStatistics() {
+  const serverStatistics: ServerStatistics = {
+    connectedPlayersCount: connectedPlayers.length,
+    activeGamesCount: 0,
+  };
+  const serverMessage: ServerMessage = {
+    name: "statistics",
+    data: serverStatistics,
+  };
+
+  const msg = JSON.stringify(serverMessage);
+  connectedPlayers.forEach((ws) => ws.send(msg));
+}

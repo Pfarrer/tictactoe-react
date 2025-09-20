@@ -3,7 +3,7 @@ import { fireEvent, render } from "@testing-library/react";
 import { MainMenu } from "./MainMenu";
 
 describe("MainMenu", () => {
-  it("shows MainMenu with game title and tab Solo selected by default", async () => {
+  it("shows MainMenu with game title and tab Solo selected by default", () => {
     const doc = render(<MainMenu />);
     expect(doc.queryByRole("heading", { name: "TicTacToe" })).toBeDefined();
 
@@ -18,7 +18,7 @@ describe("MainMenu", () => {
     const onlineTab = doc.getByRole("tab", { name: "Online" });
     expect(onlineTab).toHaveAttribute("aria-selected", "false");
 
-    await fireEvent.click(onlineTab);
-    expect(doc.getByRole("tab", { name: "Online" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(onlineTab);
+    expect(onlineTab).toHaveAttribute("aria-selected", "true");
   });
 });

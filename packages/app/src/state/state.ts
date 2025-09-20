@@ -1,55 +1,148 @@
+import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
+import * as websocket from "#server/websocket.ts";
 import { hasWinner } from "@tic-tac-toe/shared/core";
-import type { BoardCells, Difficulty, GameMode, GameStatus, PlayerType } from "@tic-tac-toe/shared/types";
+import type {
+  BoardCells,
+  Difficulty,
+  GameMode,
+  GameStatus,
+  PlayerType,
+  ServerStatistics,
+} from "@tic-tac-toe/shared/types";
+import { create as mutativeCreate } from "mutative";
 import { create } from "zustand";
 import { mutative } from "zustand-mutative";
-import { create as mutativeCreate } from "mutative";
-import { type MainMenuTab, type AppPage, MainMenuTabValues, AppPageValues } from "./types";
+import { devtools } from "zustand/middleware";
+import { type AppPage, AppPageValues, type MainMenuTab, MainMenuTabValues, type ServerStatus } from "./types";
 import { requireValidType } from "./utils";
-import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
 
 type State = {
   activePage: AppPage;
-  boardCells: BoardCells;
   mainMenu: {
     selectedTab: MainMenuTab;
-    serverUrl: string;
   };
+  gameSession: null | {
+    status: "active";
+  };
+  serverConnection: {
+    url: string;
+    status: ServerStatus;
+    statistics?: ServerStatistics;
+  };
+  boardCells: BoardCells;
 };
 
 type Actions = {
-  setBoardCells(board: BoardCells): void;
+  navigateTo(page: AppPage): void;
 
   mainMenu: {
     selectTab(name: string): void;
-    setServerUrl(url: string): void;
   };
+
+  serverConnection: {
+    setUrl(url: string): void;
+    connectToServer(): void;
+    connectionEstablished(): void;
+    disconnectFromServer(): void;
+  };
+
+  setBoardCells(board: BoardCells): void;
 };
 
 export const useStateStore = create<State & Actions>()(
-  mutative((set) => ({
-    activePage: AppPageValues[0],
+  mutative(
+    devtools((set) => ({
+      activePage: "main-menu",
+      navigateToselectTab: (page: string) =>
+        set(
+          (state) => {
+            state.activePage = requireValidType(page, AppPageValues);
+          },
+          true,
+          "mainMenu/selectTab",
+        ),
 
-    mainMenu: {
-      selectedTab: MainMenuTabValues[0],
-      serverUrl: MAIN_MENU_SERVER_URL_DEFAULT,
+      mainMenu: {
+        selectedTab: "solo",
 
-      selectTab: (name) =>
+        selectTab: (name) =>
+          set(
+            (state) => {
+              state.mainMenu.selectedTab = requireValidType(name, MainMenuTabValues);
+            },
+            true,
+            "mainMenu/selectTab",
+          ),
+      },
+
+      gameSession: null,
+
+      serverConnection: {
+        url: MAIN_MENU_SERVER_URL_DEFAULT,
+        status: "disconnected",
+
+        setUrl: (url) =>
+          set(
+            (state) => {
+              state.serverConnection.url = url;
+              if (state.serverConnection.status === "connected") {
+                websocket.disconnect();
+              }
+            },
+            true,
+            "serverConnection/setUrl",
+          ),
+
+        connectToServer: () =>
+          set(
+            (state) => {
+              state.serverConnection.status = "connecting";
+              websocket.connect(state.serverConnection.url);
+            },
+            true,
+            "serverConnection/connectToServer",
+          ),
+
+        connectionEstablished: () =>
+          set(
+            (state) => {
+              state.serverConnection.status = "connected";
+              state.activePage = "server-lobby";
+            },
+            true,
+            "serverConnection/connectionEstablished",
+          ),
+
+        disconnectFromServer: () =>
+          set(
+            (state) => {
+              websocket.disconnect();
+              state.serverConnection.status = "disconnected";
+              state.activePage = "main-menu";
+            },
+            true,
+            "serverConnection/disconnectFromServer",
+          ),
+
+        connectionClosed: () =>
+          set(
+            (state) => {
+              state.serverConnection.status = "disconnected";
+              state.serverConnection.statistics = undefined;
+              state.activePage = "main-menu";
+            },
+            true,
+            "serverConnection/connectionClosed",
+          ),
+      },
+
+      boardCells: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+      setBoardCells: (boardCells) =>
         set((state) => {
-          state.mainMenu.selectedTab = requireValidType(name, MainMenuTabValues);
+          state.boardCells = boardCells;
         }),
-
-      setServerUrl: (url) =>
-        set((state) => {
-          state.mainMenu.serverUrl = url;
-        }),
-    },
-
-    boardCells: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-    setBoardCells: (boardCells) =>
-      set((state) => {
-        state.boardCells = boardCells;
-      }),
-  })),
+    })),
+  ),
 );
 
 ///////////////

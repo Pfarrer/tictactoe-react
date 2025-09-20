@@ -1,20 +1,20 @@
 import type Konva from "konva";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { Circle, Group, Layer, Line, Rect } from "react-konva";
 import { BOARD_PADDING, CELL_SIZE } from "#/constants";
-import { GameStateContext } from "#/GameStateConext";
 import type { BoardCell } from "@tic-tac-toe/shared/types";
 import { useStateStore } from "#state/state.ts";
 
 export function Cells() {
   const boardCells = useStateStore((state) => state.boardCells);
+  const isGameActive = useStateStore((state) => state.gameSession?.status === "active");
 
   const onCellClick = (idx: number) => {
     // dispatch({ type: "player_move_requested", cellIdx: idx });
   };
 
   return (
-    // <Layer listening={gameState.gameStatus === "active" && gameState.nextTurn === "human"}>
+    // <Layer listening={isGameActive && gameState.nextTurn === "human"}>
     <Layer listening={false}>
       {boardCells.map((cellState: BoardCell, idx: number) => (
         <Group
@@ -24,7 +24,7 @@ export function Cells() {
           onClick={() => onCellClick(idx)}
           onTap={() => onCellClick(idx)}
         >
-          <Cell cellState={cellState}></Cell>
+          <Cell cellState={cellState} isClickable={isGameActive && cellState === " "}></Cell>
         </Group>
       ))}
     </Layer>
@@ -36,11 +36,6 @@ const CELL_COLOR_HOVER = "gray";
 
 export function Cell({ cellState, isClickable }: { cellState: BoardCell; isClickable: boolean }) {
   const rectRef = useRef<Konva.Rect>(null as never);
-
-  function cellFillColor() {
-    const isClickable = cellState === " " && state.gameStatus === "active";
-    return isClickable ? CELL_COLOR_DEFAULT : "transparent";
-  }
 
   const onHover = (isHovered: boolean) => {
     if (cellState !== " ") return;
@@ -57,7 +52,7 @@ export function Cell({ cellState, isClickable }: { cellState: BoardCell; isClick
         ref={rectRef}
         width={CELL_SIZE}
         height={CELL_SIZE}
-        fill={cellFillColor()}
+        fill={isClickable ? CELL_COLOR_DEFAULT : "transparent"}
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}
       />

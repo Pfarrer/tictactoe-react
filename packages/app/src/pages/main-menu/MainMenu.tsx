@@ -21,7 +21,7 @@ export function MainMenu() {
 function GameSettingsTabs() {
   const selectedTab = useStateStore((state) => state.mainMenu.selectedTab);
   const selectTab = useStateStore((state) => state.mainMenu.selectTab);
-
+  console.log("render");
   return (
     <>
       <TabsRoot>
@@ -31,7 +31,14 @@ function GameSettingsTabs() {
         <TabsItem icon={<FaUserGroup />} active={selectedTab === "hotseat"} onActivate={() => selectTab("hotseat")}>
           Hotseat
         </TabsItem>
-        <TabsItem icon={<FaWifi />} active={selectedTab === "online"} onActivate={() => selectTab("online")}>
+        <TabsItem
+          icon={<FaWifi />}
+          active={selectedTab === "online"}
+          onActivate={() => {
+            console.log("activate!!!");
+            selectTab("online");
+          }}
+        >
           Online
         </TabsItem>
       </TabsRoot>
@@ -67,13 +74,21 @@ function GameSettingsHotseat() {
 }
 
 function GameSettingsOnline() {
-  const serverUrl = useStateStore((state) => state.mainMenu.serverUrl);
-  const setServerUrl = useStateStore((state) => state.mainMenu.setServerUrl);
+  const serverStatus = useStateStore((state) => state.serverConnection.status);
+  const serverUrl = useStateStore((state) => state.serverConnection.url);
+  const setServerUrl = useStateStore((state) => state.serverConnection.setUrl);
+  const connectToServer = useStateStore((state) => state.serverConnection.connectToServer);
 
   return (
     <div className="flex flex-col">
       <Input label="Server Url" value={serverUrl} onChange={setServerUrl} />
-      <Button>Connect</Button>
+      <Button
+        isEnabled={serverStatus !== "connecting"}
+        showSpinner={serverStatus === "connecting"}
+        onClick={connectToServer}
+      >
+        Connect
+      </Button>
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default defineConfig({
   base: "./",
   test: {
     environment: "jsdom",
-    setupFiles: "./tests/setup.ts",
+    setupFiles: "./test/setup.ts",
     coverage: {
       include: ["src/**"],
     },

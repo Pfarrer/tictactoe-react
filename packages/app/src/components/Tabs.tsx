@@ -5,7 +5,7 @@ export function TabsRoot({ children }: Children) {
   return (
     <ul
       role="tablist"
-      className="flex flex-wrap mb-4 text-md font-medium text-center text-inactive border-b-1 border-inactive"
+      className="flex flex-wrap my-2 text-md font-medium text-center text-inactive border-b-1 border-inactive"
     >
       {children}
     </ul>
@@ -24,7 +24,7 @@ export function TabsItem({ icon, active, onActivate, children }: ItemProps) {
       <a
         href="#"
         data-variant={active ? "active" : "default"}
-        className="inline-flex items-center justify-center p-4 border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
+        className="inline-flex items-center justify-center px-4 py-2 border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
         onClick={onActivate}
       >
         <div className="mr-2">{icon}</div>
