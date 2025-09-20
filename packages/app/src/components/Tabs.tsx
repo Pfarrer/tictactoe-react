@@ -1,9 +1,12 @@
 import type { Children } from "#utils.ts";
 import type { ReactNode } from "react";
 
-function Root({ children }: Children) {
+export function TabsRoot({ children }: Children) {
   return (
-    <ul role="tablist" className="flex flex-wrap mb-4 text-md font-medium text-center text-inactive border-b-1 border-inactive">
+    <ul
+      role="tablist"
+      className="flex flex-wrap mb-4 text-md font-medium text-center text-inactive border-b-1 border-inactive"
+    >
       {children}
     </ul>
   );
@@ -15,12 +18,12 @@ type ItemProps = {
   onActivate: () => void;
 } & Children;
 
-function Item({ icon, active, onActivate, children }: ItemProps) {
+export function TabsItem({ icon, active, onActivate, children }: ItemProps) {
   return (
     <li role="tab" className="me-2" aria-selected={active}>
       <a
         href="#"
-        data-variant={active ? 'active' : 'default'}
+        data-variant={active ? "active" : "default"}
         className="inline-flex items-center justify-center p-4 border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
         onClick={onActivate}
       >
@@ -31,16 +34,6 @@ function Item({ icon, active, onActivate, children }: ItemProps) {
   );
 }
 
-function Content({ children }: Children) {
-  return (
-    <main className="">
-      {children}
-    </main>
-  );
+export function TabsContent({ children }: Children) {
+  return <main className="">{children}</main>;
 }
-
-export const Tabs = {
-  Root,
-  Item,
-  Content,
-};

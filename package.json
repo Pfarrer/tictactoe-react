@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
-    "lint-fix": "eslint . fix",
+    "lint-fix": "eslint . --fix",
     "prettier": "prettier . --check",
-    "prettier-write": "prettier . --write"
+    "prettier-write": "prettier . --write",
+    "prepare": "husky"
   },
   "type": "module",
   "workspaces": [
@@ -16,6 +17,7 @@
   ],
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2"
   }
 }
