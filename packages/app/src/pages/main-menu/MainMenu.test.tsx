@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MainMenu } from "./MainMenu";
+import { MainMenuTabValues, type MainMenuTab } from "#state/types.ts";
 
 describe("MainMenu", () => {
   it("shows MainMenu with game title and tab Solo selected by default", () => {
@@ -12,13 +13,21 @@ describe("MainMenu", () => {
     expect(soloTab).toHaveAttribute("aria-selected", "true");
   });
 
-  it.skip("selects online tab when user clicks on it", async () => {
-    const doc = render(<MainMenu />);
+  it.each(MainMenuTabValues)("selects %s tab when user clicks on it", (tabName: MainMenuTab) => {
+    // Capitalize the first letter
+    const tabText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
 
-    const onlineTab = doc.getByRole("tab", { name: "Online" });
-    expect(onlineTab).toHaveAttribute("aria-selected", "false");
+    render(<MainMenu />);
 
-    fireEvent.click(onlineTab);
-    expect(onlineTab).toHaveAttribute("aria-selected", "true");
+    const tab = screen.getByRole("tab", { name: tabText });
+    if (tabName === "solo") {
+      // Solo is the default tab
+      expect(tab).toHaveAttribute("aria-selected", "true");
+    } else {
+      expect(tab).toHaveAttribute("aria-selected", "false");
+    }
+
+    fireEvent.click(tab);
+    expect(tab).toHaveAttribute("aria-selected", "true");
   });
 });

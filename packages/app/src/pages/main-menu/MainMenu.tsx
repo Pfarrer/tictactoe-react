@@ -21,7 +21,7 @@ export function MainMenu() {
 function GameSettingsTabs() {
   const selectedTab = useStateStore((state) => state.mainMenu.selectedTab);
   const selectTab = useStateStore((state) => state.mainMenu.selectTab);
-  console.log("render");
+
   return (
     <>
       <TabsRoot>
@@ -31,14 +31,7 @@ function GameSettingsTabs() {
         <TabsItem icon={<FaUserGroup />} active={selectedTab === "hotseat"} onActivate={() => selectTab("hotseat")}>
           Hotseat
         </TabsItem>
-        <TabsItem
-          icon={<FaWifi />}
-          active={selectedTab === "online"}
-          onActivate={() => {
-            console.log("activate!!!");
-            selectTab("online");
-          }}
-        >
+        <TabsItem icon={<FaWifi />} active={selectedTab === "online"} onActivate={() => selectTab("online")}>
           Online
         </TabsItem>
       </TabsRoot>

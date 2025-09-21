@@ -20,16 +20,15 @@ type ItemProps = {
 
 export function TabsItem({ icon, active, onActivate, children }: ItemProps) {
   return (
-    <li role="tab" className="me-2" aria-selected={active}>
-      <a
-        href="#"
-        data-variant={active ? "active" : "default"}
-        className="inline-flex items-center justify-center px-4 py-2 border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
-        onClick={onActivate}
-      >
-        <div className="mr-2">{icon}</div>
-        {children}
-      </a>
+    <li
+      role="tab"
+      aria-selected={active}
+      onClick={onActivate}
+      data-variant={active ? "active" : "default"}
+      className="inline-flex items-center justify-center px-4 py-2 me-2 cursor-pointer border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
+    >
+      <div className="mr-2">{icon}</div>
+      {children}
     </li>
   );
 }
