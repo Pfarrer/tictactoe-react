@@ -1,13 +1,14 @@
 import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
 import * as websocket from "#server/websocket.ts";
 import { hasWinner } from "@tic-tac-toe/shared/core";
-import type {
-  BoardCells,
-  Difficulty,
-  GameMode,
-  GameStatus,
-  PlayerType,
-  ServerStatistics,
+import {
+  DifficultyValues,
+  type BoardCells,
+  type Difficulty,
+  type GameMode,
+  type GameStatus,
+  type PlayerType,
+  type ServerStatistics,
 } from "@tic-tac-toe/shared/types";
 import { create as mutativeCreate } from "mutative";
 import { create } from "zustand";
@@ -20,9 +21,11 @@ type State = {
   activePage: AppPage;
   mainMenu: {
     selectedTab: MainMenuTab;
+    soloDifficulty: Difficulty;
   };
   gameSession: null | {
-    status: "active";
+    mode: "solo";
+    difficulty: Difficulty;
   };
   serverConnection: {
     url: string;
@@ -37,6 +40,8 @@ type Actions = {
 
   mainMenu: {
     selectTab(name: string): void;
+    setSoloDifficulty: (difficulty: string) => void;
+    startSoloGame: () => void;
   };
 
   serverConnection: {
@@ -64,6 +69,7 @@ export const useStateStore = create<State & Actions>()(
 
       mainMenu: {
         selectedTab: "solo",
+        soloDifficulty: "random",
 
         selectTab: (name) =>
           set(
@@ -72,6 +78,28 @@ export const useStateStore = create<State & Actions>()(
             },
             true,
             "mainMenu/selectTab",
+          ),
+
+        setSoloDifficulty: (difficulty) =>
+          set(
+            (state) => {
+              state.mainMenu.soloDifficulty = requireValidType(difficulty, DifficultyValues);
+            },
+            true,
+            "mainMenu/setSoloDifficulty",
+          ),
+
+        startSoloGame: () =>
+          set(
+            (state) => {
+              state.gameSession = {
+                mode: "solo",
+                difficulty: state.mainMenu.soloDifficulty,
+              };
+              state.activePage = "solo-game";
+            },
+            true,
+            "mainMenu/startSoloGame",
           ),
       },
 
@@ -159,19 +187,10 @@ export interface GameState {
 }
 
 export type GameAction =
-  | { type: "reset_requested" }
   | { type: "start_requested"; gameMode: GameMode; difficulty: Difficulty }
   | { type: "connect_requested"; serverUrl: string }
   | { type: "player_move_requested"; cellIdx: number }
   | { type: "computer_move_requested"; cellIdx: number };
-
-export const initState: () => GameState = () => ({
-  board: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-  difficulty: "Luck",
-  gameMode: "Human-vs-Computer",
-  gameStatus: "pristine",
-  nextTurn: "human",
-});
 
 export function reducer(state: GameState, action: GameAction): GameState {
   const [draft, finalize] = mutativeCreate(state);
@@ -194,10 +213,6 @@ export function reducer(state: GameState, action: GameAction): GameState {
       draft.difficulty = action.difficulty;
       draft.gameStatus = "active";
       break;
-    // case "connect_requested":
-    //   break;
-    case "reset_requested":
-      return initState();
     default:
       console.error("Action not implemented", action);
   }

@@ -5,4 +5,5 @@ export type GameStatus = "pristine" | "active" | "finished";
 export type BoardCell = " " | "x" | "o";
 export type BoardCells = BoardCell[] & { length: 9 };
 
-export type Difficulty = "Luck" | "Simple" | "Hard";
+export const DifficultyValues = ["random", "fair", "hard"] as const;
+export type Difficulty = (typeof DifficultyValues)[number];

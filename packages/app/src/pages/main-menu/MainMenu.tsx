@@ -5,6 +5,7 @@ import { FaUserGroup, FaUserNinja, FaWifi } from "react-icons/fa6";
 import { Input } from "#components/Input.tsx";
 import { Button } from "#components/Button.tsx";
 import { TabsContent, TabsItem, TabsRoot } from "#components/Tabs.tsx";
+import { Select, SelectOption } from "#components/Select.tsx";
 
 export function MainMenu() {
   useRandomBoardCells();
@@ -59,7 +60,20 @@ function GameSettingsTabs() {
 }
 
 function GameSettingsSolo() {
-  return "";
+  const difficulty = useStateStore((state) => state.mainMenu.soloDifficulty);
+  const setDifficulty = useStateStore((state) => state.mainMenu.setSoloDifficulty);
+  const startSoloGame = useStateStore((state) => state.mainMenu.startSoloGame);
+
+  return (
+    <div className="flex flex-col">
+      <Select label="Difficulty" value={difficulty} onChange={setDifficulty}>
+        <SelectOption value="random" text="Random (random moves only)" />
+        <SelectOption value="fair" text="Fair (planning 1 step ahead)" />
+        <SelectOption value="hard" text="Hard (planning all steps ahead)" />
+      </Select>
+      <Button onClick={startSoloGame}>Start</Button>
+    </div>
+  );
 }
 
 function GameSettingsHotseat() {

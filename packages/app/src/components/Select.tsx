@@ -1,13 +1,14 @@
+import type { Children } from "#utils.ts";
 import { useId } from "react";
 
-type InputProps = {
+type SelectProps = {
   value: string;
   label?: string;
 
   onChange: (value: string) => void;
-};
+} & Children;
 
-export function Input({ value, onChange, label }: InputProps) {
+export function Select({ label, value, onChange, children }: SelectProps) {
   const inputId = useId();
 
   return (
@@ -17,13 +18,23 @@ export function Input({ value, onChange, label }: InputProps) {
           {label}
         </label>
       )}
-      <input
-        type="text"
+      <select
         id={inputId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="rounded-md border border-inactive focus:ring-active focus:border-active block w-full p-2"
-      />
+      >
+        {children}
+      </select>
     </div>
   );
+}
+
+type SelectOptionProps = {
+  value: string;
+  text: string;
+};
+
+export function SelectOption({ value, text }: SelectOptionProps) {
+  return <option value={value}>{text}</option>;
 }
