@@ -1,18 +1,20 @@
-export function GameSummary() {
-  const winner = undefined; // TODO
+import { Button } from "#components/Button.tsx";
+import { DialogBody, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
+import { useStateStore } from "#state/state.ts";
 
-  function onRestartClick() {
-    // TODO
-  }
+export function GameSummary() {
+  const winner = useStateStore((state) => state.gameSession?.winner);
+  const navigateToPage = useStateStore((state) => state.navigateToPage);
 
   return (
-    <section className="p-8">
-      <h2>
-        {winner === "human" && "Congrats! You won!"}
-        {winner === "computer" && "Ugh! You lost..."}
-        {winner === undefined && "Unfortunately, a draw..."}
-      </h2>
-      <button onClick={onRestartClick}>Restart</button>
-    </section>
+    <DialogRoot anchor="top" backdrop={false}>
+      {winner === "human" && <DialogTitle text="Congrats! You won!" />}
+      {winner === "computer" && <DialogTitle text="Ugh! You lost..." />}
+      {winner === undefined && <DialogTitle text="Unfortunately, a draw..." />}
+
+      <DialogBody>
+        <Button onClick={() => navigateToPage("main-menu")}>Back to the menu</Button>
+      </DialogBody>
+    </DialogRoot>
   );
 }

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tic-tac-toe/shared": "*",
+    "classnames": "^2.5.1",
     "konva": "^10.0.2",
     "mutative": "^1.2.0",
     "react": "^19.1.1",

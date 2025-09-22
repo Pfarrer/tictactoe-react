@@ -1,5 +1,5 @@
 import { Button } from "#components/Button.tsx";
-import { DialogDescription, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
+import { DialogBody, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
 import { useRandomBoardCells } from "#pages/main-menu/useRandomBoardCells.ts";
 import { useStateStore } from "#state/state.ts";
 
@@ -11,9 +11,11 @@ export function ServerLobby() {
 
   return (
     <DialogRoot>
-      <DialogTitle>Server Lobby @ {serverHostname}</DialogTitle>
-      <Description />
-      <Button onClick={disconnectFromServer}>Disconnect</Button>
+      <DialogTitle text={`Server Lobby @ ${serverHostname}`} />
+      <DialogBody>
+        <Description />
+        <Button onClick={disconnectFromServer}>Disconnect</Button>
+      </DialogBody>
     </DialogRoot>
   );
 }
@@ -26,5 +28,5 @@ function Description() {
     return `${serverStatistics.activeGamesCount} active games, ${serverStatistics.connectedPlayersCount} players online`;
   }
 
-  return <DialogDescription>{serverStatisticsText()}</DialogDescription>;
+  return serverStatisticsText();
 }

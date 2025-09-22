@@ -1,5 +1,5 @@
 import { Button } from "#components/Button.tsx";
-import { DialogDescription, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
+import { DialogBody, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
 import { Input } from "#components/Input.tsx";
 import { Select, SelectOption } from "#components/Select.tsx";
 import { TabsContent, TabsItem, TabsRoot } from "#components/Tabs.tsx";
@@ -12,8 +12,8 @@ export function MainMenu() {
 
   return (
     <DialogRoot>
-      <DialogTitle>TicTacToe</DialogTitle>
-      <DialogDescription>Classic TicTacToe game.</DialogDescription>
+      <DialogTitle text="TicTacToe" />
+      <DialogBody>Classic TicTacToe game.</DialogBody>
       <GameSettingsTabs />
     </DialogRoot>
   );
