@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
-import { findByLabelText, fireEvent, getByLabelText, queryByLabelText, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { MainMenu } from "./MainMenu";
-import { MainMenuTabValues, type MainMenuTab } from "#state/types.ts";
 import { useStateStore } from "#state/state.ts";
+import { MainMenuTabValues, type MainMenuTab } from "#state/types.ts";
+import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { DifficultyValues, type Difficulty } from "@tic-tac-toe/shared/types";
+import { describe, expect, it } from "vitest";
+import { MainMenu } from "./MainMenu";
 
 describe("MainMenu", () => {
   it("shows MainMenu with game title and tab Solo selected by default", () => {

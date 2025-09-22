@@ -1,11 +1,11 @@
-import { useStateStore } from "#state/state.ts";
-import { useRandomBoardCells } from "./useRandomBoardCells";
-import { DialogDescription, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
-import { FaUserGroup, FaUserNinja, FaWifi } from "react-icons/fa6";
-import { Input } from "#components/Input.tsx";
 import { Button } from "#components/Button.tsx";
-import { TabsContent, TabsItem, TabsRoot } from "#components/Tabs.tsx";
+import { DialogDescription, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
+import { Input } from "#components/Input.tsx";
 import { Select, SelectOption } from "#components/Select.tsx";
+import { TabsContent, TabsItem, TabsRoot } from "#components/Tabs.tsx";
+import { useStateStore } from "#state/state.ts";
+import { FaUserGroup, FaUserNinja, FaWifi } from "react-icons/fa6";
+import { useRandomBoardCells } from "./useRandomBoardCells";
 
 export function MainMenu() {
   useRandomBoardCells();

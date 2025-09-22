@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { reducer, type GameState } from "./state";
 import { hasWinner } from "@tic-tac-toe/shared/core";
 import type { BoardCells, GameMode, PlayerType } from "@tic-tac-toe/shared/types";
+import { describe, expect, it } from "vitest";
+import { reducer, type GameState } from "./state";
 
 describe("state", () => {
   it("game finsihed when there are no empty cells left", () => {
@@ -27,7 +27,7 @@ function initActiveGameState(
     board,
     gameMode,
     gameStatus: "active",
-    difficulty: "Luck",
+    difficulty: "random",
     nextTurn,
   };
 }

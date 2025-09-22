@@ -1,4 +1,4 @@
-import type { BoardCells, BoardCell, PlayerType } from "../../types/fundamental";
+import type { BoardCell, BoardCells, PlayerType } from "../../types/fundamental";
 
 const DIMENSIONS = 3;
 

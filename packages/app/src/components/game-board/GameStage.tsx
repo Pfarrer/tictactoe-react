@@ -1,6 +1,6 @@
-import { Stage } from "react-konva";
 import { STAGE_SIZE } from "#/constants";
 import { useLayoutEffect, useState, type JSX } from "react";
+import { Stage } from "react-konva";
 
 export function GameStage({ children }: { children: JSX.Element | JSX.Element[] }) {
   const windowSize = useWindowSize();

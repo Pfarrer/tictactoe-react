@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { findBestMove } from "./minimax";
 import type { BoardCells } from "../../types";
+import { findBestMove } from "./minimax";
 
 describe("minimax", () => {
   const board = ["o", "o", " ", "x", " ", " ", " ", " ", " "] as BoardCells;

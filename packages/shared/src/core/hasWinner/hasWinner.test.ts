@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { hasWinner } from "./hasWinner";
 import type { BoardCells } from "../../types";
+import { hasWinner } from "./hasWinner";
 
 describe("hasWinner", () => {
   it("finds no winner on an empty board", () => {

@@ -1,17 +1,17 @@
+import { BOARD_PADDING, CELL_SIZE } from "#/constants";
+import { useStateStore } from "#state/state.ts";
+import type { BoardCell } from "@tic-tac-toe/shared/types";
 import type Konva from "konva";
 import { useRef } from "react";
 import { Circle, Group, Layer, Line, Rect } from "react-konva";
-import { BOARD_PADDING, CELL_SIZE } from "#/constants";
-import type { BoardCell } from "@tic-tac-toe/shared/types";
-import { useStateStore } from "#state/state.ts";
 
 export function Cells() {
   const boardCells = useStateStore((state) => state.boardCells);
   const isGameActive = useStateStore((state) => state.gameSession?.status === "active");
 
-  const onCellClick = (idx: number) => {
-    // dispatch({ type: "player_move_requested", cellIdx: idx });
-  };
+  // const onCellClick = (idx: number) => {
+  // dispatch({ type: "player_move_requested", cellIdx: idx });
+  // };
 
   return (
     // <Layer listening={isGameActive && gameState.nextTurn === "human"}>
@@ -21,8 +21,8 @@ export function Cells() {
           key={idx}
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
           y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
-          onClick={() => onCellClick(idx)}
-          onTap={() => onCellClick(idx)}
+          // onClick={() => onCellClick(idx)}
+          // onTap={() => onCellClick(idx)}
         >
           <Cell cellState={cellState} isClickable={isGameActive && cellState === " "}></Cell>
         </Group>

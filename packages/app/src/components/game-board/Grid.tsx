@@ -1,5 +1,5 @@
-import { Layer, Line } from "react-konva";
 import { BOARD_PADDING, CELL_SIZE, STAGE_SIZE } from "#/constants";
+import { Layer, Line } from "react-konva";
 
 export function Grid() {
   return (

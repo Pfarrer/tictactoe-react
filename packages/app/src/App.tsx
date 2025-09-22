@@ -1,7 +1,7 @@
 import { GameBoard } from "#/components/game-board";
 import { MainMenu } from "#pages/main-menu/MainMenu.tsx";
-import { useStateStore } from "#state/state.ts";
 import { ServerLobby } from "#pages/server-lobby/ServerLobby.tsx";
+import { useStateStore } from "#state/state.ts";
 
 function App() {
   const activePage = useStateStore((state) => state.activePage);

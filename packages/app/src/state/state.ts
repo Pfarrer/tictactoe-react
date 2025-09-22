@@ -2,9 +2,9 @@ import { MAIN_MENU_SERVER_URL_DEFAULT } from "#constants.ts";
 import * as websocket from "#server/websocket.ts";
 import { hasWinner } from "@tic-tac-toe/shared/core";
 import {
-  DifficultyValues,
   type BoardCells,
   type Difficulty,
+  DifficultyValues,
   type GameMode,
   type GameStatus,
   type PlayerType,
@@ -25,6 +25,7 @@ type State = {
   };
   gameSession: null | {
     mode: "solo";
+    status: GameStatus;
     difficulty: Difficulty;
   };
   serverConnection: {
@@ -42,6 +43,10 @@ type Actions = {
     selectTab(name: string): void;
     setSoloDifficulty: (difficulty: string) => void;
     startSoloGame: () => void;
+  };
+
+  gameSession: null | {
+    requestComputerMove: (cellIdx: number) => void;
   };
 
   serverConnection: {
@@ -94,7 +99,10 @@ export const useStateStore = create<State & Actions>()(
             (state) => {
               state.gameSession = {
                 mode: "solo",
+                status: "pristine",
                 difficulty: state.mainMenu.soloDifficulty,
+
+                requestComputerMove: requestComputerMove(set, "gameSession/requestComputerMove"),
               };
               state.activePage = "solo-game";
             },
@@ -172,6 +180,16 @@ export const useStateStore = create<State & Actions>()(
     })),
   ),
 );
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const requestComputerMove = (set: any, actionName: string) => (cellIdx: number) =>
+  set(
+    (state: State) => {
+      console.log("computer move", state, cellIdx);
+    },
+    true,
+    actionName,
+  );
 
 ///////////////
 // Old State
