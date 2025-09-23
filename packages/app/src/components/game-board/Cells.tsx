@@ -43,16 +43,14 @@ export function Cell({ isClickable }: { isClickable: boolean }) {
   };
 
   return (
-    <>
-      <Rect
-        ref={rectRef}
-        width={CELL_SIZE}
-        height={CELL_SIZE}
-        fill="rgba(0,0,0,0)"
-        onMouseEnter={() => onHover(true)}
-        onMouseLeave={() => onHover(false)}
-      />
-    </>
+    <Rect
+      ref={rectRef}
+      width={CELL_SIZE}
+      height={CELL_SIZE}
+      fill="rgba(0,0,0,0)"
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+    />
   );
 }
 
@@ -62,7 +60,7 @@ function ComputerCellMark() {
 
 function HumanCellMark() {
   return (
-    <>
+    <Group>
       <Line
         points={[CELL_SIZE / 4, CELL_SIZE / 4, (3 * CELL_SIZE) / 4, (3 * CELL_SIZE) / 4]}
         strokeWidth={0.7}
@@ -73,6 +71,6 @@ function HumanCellMark() {
         strokeWidth={0.7}
         stroke={"black"}
       />
-    </>
+    </Group>
   );
 }
