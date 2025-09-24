@@ -1,5 +1,4 @@
 import { Button } from "#components/Button.tsx";
-import { DialogBody, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
 import { useStateStore } from "#state/state.ts";
 
 export function GameSummary() {
@@ -7,14 +6,13 @@ export function GameSummary() {
   const navigateToPage = useStateStore((state) => state.navigateToPage);
 
   return (
-    <DialogRoot anchor="top" backdrop={false}>
-      {winner === "human" && <DialogTitle text="Congrats! You won!" />}
-      {winner === "computer" && <DialogTitle text="Ugh! You lost..." />}
-      {winner === undefined && <DialogTitle text="Unfortunately, a draw..." />}
-
-      <DialogBody>
-        <Button onClick={() => navigateToPage("main-menu")}>Back to the menu</Button>
-      </DialogBody>
-    </DialogRoot>
+    <section className="absolute top-0 left-1/2 -translate-x-1/2 p-4 bg-neutral-100/75 rounded-xl">
+      <p className="text-md font-bold mb-4">
+        {winner === "human" && "Congrats! You won!"}
+        {winner === "computer" && "Ugh! You lost..."}
+        {winner === undefined && "Unfortunately, a draw..."}
+      </p>
+      <Button onClick={() => navigateToPage("main-menu")}>Back to the menu</Button>
+    </section>
   );
 }

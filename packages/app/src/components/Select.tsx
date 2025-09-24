@@ -22,7 +22,7 @@ export function Select({ label, value, onChange, children }: SelectProps) {
         id={inputId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-md border border-inactive focus:ring-active focus:border-active block w-full p-2"
+        className="block w-full p-2.5 rounded-md border border-inactive focus:ring-active focus:border-active"
       >
         {children}
       </select>

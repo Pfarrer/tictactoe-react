@@ -25,7 +25,7 @@ export function TabsItem({ icon, active, onActivate, children }: ItemProps) {
       aria-selected={active}
       onClick={onActivate}
       data-variant={active ? "active" : "default"}
-      className="inline-flex items-center justify-center px-4 py-2 me-2 cursor-pointer border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
+      className="inline-flex items-center justify-center px-4 py-2 me-2 cursor-pointer select-none border-b-1 border-transparent hover:text-hover hover:border-hover data-[variant=active]:text-active data-[variant=active]:border-active"
     >
       <div className="mr-2">{icon}</div>
       {children}

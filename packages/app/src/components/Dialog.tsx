@@ -26,9 +26,9 @@ type DialogTitleProps = {
 };
 
 export function DialogTitle({ text }: DialogTitleProps) {
-  return <h2 className="">{text}</h2>;
+  return <h2 className="text-2xl">{text}</h2>;
 }
 
 export function DialogBody({ children }: Children) {
-  return <p className="flex flex-col">{children}</p>;
+  return <div className="flex flex-col">{children}</div>;
 }
