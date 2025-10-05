@@ -7,21 +7,21 @@ import { Circle, Group, Layer, Line, Rect } from "react-konva";
 
 export function Cells() {
   const boardCells = useStateStore((state) => state.boardCells);
-  const isGameActive = useStateStore(
-    (state) => state.gameSession?.status === "pristine" || state.gameSession?.status === "active",
-  );
-  const nextTurn = useStateStore((state) => state.gameSession?.nextTurn);
-  const requestPlayerMove = useStateStore((state) => state.gameSession?.requestPlayerMove) || (() => {});
+  const gameSession = useStateStore((state) => state.gameSession);
+  const isGameActive = gameSession?.status === "pristine" || gameSession?.status === "active";
+
+  // Use whatever move handler is available for the current game mode
+  const requestMove = gameSession?.mode === "solo" ? gameSession?.requestPlayerMove : gameSession?.requestHotseatMove;
 
   return (
-    <Layer listening={isGameActive && nextTurn === "human"}>
+    <Layer listening={isGameActive && !!requestMove}>
       {boardCells.map((cellState: BoardCell, idx: number) => (
         <Group
           key={idx}
           x={BOARD_PADDING + CELL_SIZE * (idx % 3)}
           y={BOARD_PADDING + CELL_SIZE * Math.floor(idx / 3)}
-          onClick={() => requestPlayerMove(idx)}
-          onTap={() => requestPlayerMove(idx)}
+          onClick={() => requestMove?.(idx)}
+          onTap={() => requestMove?.(idx)}
         >
           <Cell isClickable={isGameActive && cellState === " "} />
           {cellState === "o" && <ComputerCellMark />}

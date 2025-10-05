@@ -47,3 +47,30 @@ This document outlines the essential commands and code style guidelines for this
 ### Error Handling
 
 - Use try-catch blocks for error handling in asynchronous operations or potentially failing code paths.
+
+## Commit Guidelines
+
+### Commit Message Format
+
+All commits made by Crush must follow the format: `MODEL@crush` where:
+
+- `MODEL` is the name of the AI model used (e.g., GLM-4.6, Gemini-2.5-Pro)
+- `@crush` indicates the commit was made by the Crush AI assistant
+
+**Examples:**
+
+- `GLM-4.6@crush`
+- `Gemini-2.5-Pro@crush`
+
+### Co-author Configuration
+
+All commits made by Crush should include the configured git user as a co-author. This ensures proper attribution to the human developer who initiated the changes. The co-author should be automatically included in the commit metadata using the standard git co-author format:
+
+```
+Co-authored-by: Human User <human@example.com>
+```
+
+This helps track both:
+
+- Which AI model made the specific changes (via author field)
+- Which human developer requested/initiated the changes (via co-author field)

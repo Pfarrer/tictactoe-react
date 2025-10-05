@@ -1,4 +1,4 @@
-export type PlayerType = "human" | "computer";
+export type PlayerType = "human" | "computer" | "player1" | "player2";
 export type GameMode = "Human-vs-Computer";
 export type GameStatus = "pristine" | "active" | "finished";
 

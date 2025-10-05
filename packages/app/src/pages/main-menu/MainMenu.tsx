@@ -77,7 +77,13 @@ function GameSettingsSolo() {
 }
 
 function GameSettingsHotseat() {
-  return "";
+  const startHotseatGame = useStateStore((state) => state.mainMenu.startHotseatGame);
+
+  return (
+    <div className="flex flex-col">
+      <Button onClick={startHotseatGame}>Start</Button>
+    </div>
+  );
 }
 
 function GameSettingsOnline() {

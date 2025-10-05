@@ -1,6 +1,5 @@
 import { MAIN_MENU_SERVER_URL_DEFAULT, SOLO_GAME_COMPUTER_MOVE_DELAY_MS } from "#constants.ts";
 import * as websocket from "#server/websocket.ts";
-import { hasWinner } from "@tic-tac-toe/shared/core";
 import {
   type BoardCells,
   type Difficulty,
@@ -16,19 +15,60 @@ import { playNextTurn } from "./computerPlayer";
 import { type AppPage, AppPageValues, type MainMenuTab, MainMenuTabValues, type ServerStatus } from "./types";
 import { requireValidType } from "./utils";
 
+function findWinningCell(board: BoardCells): undefined | "x" | "o" {
+  // Check horizontally
+  for (let row = 0; row < 3; row++) {
+    const offset = 3 * row;
+    const cell = board[offset + 0];
+    if (cell !== " " && cell === board[offset + 1] && cell === board[offset + 2]) {
+      return cell as "x" | "o";
+    }
+  }
+
+  // Check vertically
+  for (let column = 0; column < 3; column++) {
+    const cell = board[0 + column];
+    if (cell !== " " && cell === board[3 + column] && cell === board[6 + column]) {
+      return cell as "x" | "o";
+    }
+  }
+
+  // Check diagonally "/"
+  const diag1Cell = board[2];
+  if (diag1Cell !== " " && diag1Cell === board[4] && board[4] === board[6]) {
+    return diag1Cell as "x" | "o";
+  }
+
+  // Check diagonally "\"
+  const diag2Cell = board[0];
+  if (diag2Cell !== " " && diag2Cell === board[4] && board[4] === board[8]) {
+    return diag2Cell as "x" | "o";
+  }
+
+  return undefined;
+}
+
 type State = {
   activePage: AppPage;
   mainMenu: {
     selectedTab: MainMenuTab;
     soloDifficulty: Difficulty;
   };
-  gameSession: null | {
-    mode: "solo";
-    status: GameStatus;
-    difficulty: Difficulty;
-    nextTurn: PlayerType;
-    winner?: PlayerType;
-  };
+  gameSession:
+    | null
+    | {
+        mode: "solo";
+        status: GameStatus;
+        difficulty: Difficulty;
+        nextTurn: PlayerType;
+        winner?: PlayerType;
+      }
+    | {
+        mode: "hotseat";
+        status: GameStatus;
+        nextTurn: PlayerType;
+        winner?: PlayerType;
+      };
   serverConnection: {
     url: string;
     status: ServerStatus;
@@ -44,12 +84,20 @@ type Actions = {
     selectTab(name: string): void;
     setSoloDifficulty: (difficulty: string) => void;
     startSoloGame: () => void;
+    startHotseatGame: () => void;
   };
 
-  gameSession: null | {
-    requestPlayerMove: (cellIdx: number) => void;
-    requestComputerMove: (cellIdx: number) => void;
-  };
+  gameSession:
+    | null
+    | {
+        mode: "solo";
+        requestPlayerMove: (cellIdx: number) => void;
+        requestComputerMove: (cellIdx: number) => void;
+      }
+    | {
+        mode: "hotseat";
+        requestHotseatMove: (cellIdx: number) => void;
+      };
 
   serverConnection: {
     setUrl(url: string): void;
@@ -118,6 +166,23 @@ export const useStateStore = create<State & Actions>()(
             },
             true,
             "mainMenu/startSoloGame",
+          ),
+
+        startHotseatGame: () =>
+          set(
+            (state) => {
+              state.gameSession = {
+                mode: "hotseat",
+                status: "pristine",
+                nextTurn: "player1",
+
+                requestHotseatMove: requestHotseatMove(set, "gameSession/requestHotseatMove"),
+              };
+              state.boardCells = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+              state.activePage = "hotseat-game";
+            },
+            true,
+            "mainMenu/startHotseatGame",
           ),
       },
 
@@ -231,15 +296,41 @@ const requestPlayerMove = (set: StateSetFn, actionName: string) => (cellIdx: num
     actionName,
   );
 
+const requestHotseatMove = (set: StateSetFn, actionName: string) => (cellIdx: number) =>
+  set(
+    (state) => {
+      const gameSession = state.gameSession;
+      if (!gameSession) return;
+      if (gameSession.mode !== "hotseat") return;
+      if (gameSession.status !== "pristine" && gameSession.status !== "active") return;
+      if (state.boardCells[cellIdx] !== " ") return;
+
+      gameSession.status = "active";
+      const playerSymbol = gameSession.nextTurn === "player1" ? "x" : "o";
+      state.boardCells[cellIdx] = playerSymbol;
+      gameSession.nextTurn = gameSession.nextTurn === "player1" ? "player2" : "player1";
+
+      checkAndUpdateIfGameIsFinished(state);
+    },
+    true,
+    actionName,
+  );
+
 function checkAndUpdateIfGameIsFinished(state: State): boolean {
   const gameSession = state.gameSession;
   if (gameSession?.status !== "active") {
     return false;
   }
 
-  const winner = hasWinner(state.boardCells);
-  if (winner !== undefined) {
-    gameSession.winner = winner;
+  const winningCell = findWinningCell(state.boardCells);
+  if (winningCell !== undefined) {
+    if (gameSession.mode === "hotseat") {
+      // For hotseat games, convert board cell to player type
+      gameSession.winner = winningCell === "x" ? "player1" : "player2";
+    } else {
+      // For solo games, use the original logic
+      gameSession.winner = winningCell === "x" ? "human" : ("computer" as PlayerType);
+    }
     gameSession.status = "finished";
   } else {
     const hasEmptyCell = state.boardCells.find((cell) => cell === " ") !== undefined;
