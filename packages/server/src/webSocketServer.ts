@@ -1,3 +1,5 @@
+import type { ClientMessage } from "@tic-tac-toe/shared/types";
+import { handleReadyForNextGame } from "./scopes/lobby";
 import { stateStore } from "./state";
 
 export function startServer(port: number = 0) {
@@ -14,8 +16,22 @@ export function startServer(port: number = 0) {
     },
 
     websocket: {
-      message(_ws, message) {
+      message(ws, message) {
         console.log("message received", message);
+
+        try {
+          const clientMessage: ClientMessage = JSON.parse(message.toString());
+
+          switch (clientMessage.name) {
+            case "readyForNextGame":
+              handleReadyForNextGame(ws, clientMessage.data.isReady);
+              break;
+            default:
+              console.warn("Unknown message type:", clientMessage);
+          }
+        } catch (error) {
+          console.error("Failed to parse message:", error);
+        }
       },
       open(ws) {
         stateStore.getState().clientConnected(ws);
