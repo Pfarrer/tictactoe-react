@@ -1,9 +1,10 @@
 import type { ServerMessage, ServerStatistics } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
-import { stateStore } from "../state";
+import { stateStore } from "../state/state";
 
 export function sendServerStatistics(sockets: ServerWebSocket<unknown>[], serverStatistics: ServerStatistics) {
   const serverMessage: ServerMessage = {
+    scope: "lobby",
     name: "statistics",
     data: serverStatistics,
   };
@@ -13,12 +14,9 @@ export function sendServerStatistics(sockets: ServerWebSocket<unknown>[], server
 }
 
 export function handleReadyForNextGame(ws: ServerWebSocket<unknown>, isReady: boolean) {
-  console.log(`Client ${ws.remoteAddress} ready for next game: ${isReady}`);
-
   if (isReady) {
     stateStore.getState().lobby.setClientReadyForNewGame(ws);
   } else {
     stateStore.getState().lobby.setClientNotReadyForNewGame(ws);
-    console.log(`Client ${ws.remoteAddress} is not ready for a new game`);
   }
 }

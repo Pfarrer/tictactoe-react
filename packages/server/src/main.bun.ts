@@ -1,4 +1,4 @@
-import { stateStore } from "./state";
+import { stateStore } from "./state/state";
 import { startServer } from "./webSocketServer";
 
 const port = Bun.env.SERVER_PORT ? Number(Bun.env.SERVER_PORT) : 4680;

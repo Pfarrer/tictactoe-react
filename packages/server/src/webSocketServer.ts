@@ -1,6 +1,6 @@
 import type { ClientMessage } from "@tic-tac-toe/shared/types";
 import { handleReadyForNextGame } from "./scopes/lobby";
-import { stateStore } from "./state";
+import { stateStore } from "./state/state";
 
 export function startServer(port: number = 0) {
   const server = Bun.serve({
@@ -17,8 +17,6 @@ export function startServer(port: number = 0) {
 
     websocket: {
       message(ws, message) {
-        console.log("message received", message);
-
         try {
           const clientMessage: ClientMessage = JSON.parse(message.toString());
 
