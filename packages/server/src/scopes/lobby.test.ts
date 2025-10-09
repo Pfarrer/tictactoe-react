@@ -1,48 +1,35 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { TestClient } from "../../test/test-client";
-import { startServerWorker, waitFor } from "../../test/test-utils";
+import { TestManager } from "../../test/test-manager";
+import { waitFor } from "../../test/test-utils";
 
 describe("Scope lobby", () => {
-  let serverUrl: string;
-  let stopServer: () => void;
-  let clients: TestClient[] = [];
+  let testManager: TestManager;
 
   beforeEach(async () => {
-    const server = await startServerWorker();
-    stopServer = server.stopServer;
-    serverUrl = server.serverUrl;
+    testManager = await TestManager.initialize();
   });
 
   afterEach(() => {
-    // Clean up any remaining WebSocket connections
-    clients.forEach((client) => {
-      client.close();
-    });
-    clients = [];
-
-    stopServer();
+    testManager.cleanup();
   });
 
   describe("server statistics", () => {
     test("should send server statistics message immediately after client connects", async () => {
-      const client = new TestClient(serverUrl);
-      clients.push(client);
+      const client = await testManager.createClient();
 
-      const message = await client.waitForNextMessage((msg) => msg.name === "statistics");
-      expect(message.data).toHaveProperty("connectedPlayersCount", 1);
-      expect(message.data).toHaveProperty("activeGamesCount", 0);
+      const message = await waitFor(() => client.receivedMessages[0]);
+      expect(message?.data).toHaveProperty("connectedPlayersCount", 1);
+      expect(message?.data).toHaveProperty("activeGamesCount", 0);
     });
 
     test("should send statistics update to all clients when a new connection is established", async () => {
-      const client1 = await new TestClient(serverUrl).waitUntilReady();
-      const client2 = await new TestClient(serverUrl).waitUntilReady();
-      clients.push(client1, client2);
+      const client1 = await testManager.createClient();
+      const client2 = await testManager.createClient();
 
       expect(client1.receivedMessages).toHaveLength(2);
       expect(client2.receivedMessages).toHaveLength(1);
 
-      const client3 = await new TestClient(serverUrl).waitUntilReady();
-      clients.push(client3);
+      const client3 = await testManager.createClient();
 
       expect(client1.receivedMessages).toHaveLength(3);
       expect(client2.receivedMessages).toHaveLength(2);
@@ -59,8 +46,7 @@ describe("Scope lobby", () => {
 
   describe("readyForNextGame", () => {
     test("should match two ready clients for a game", async () => {
-      const client1 = await new TestClient(serverUrl).waitUntilReady();
-      clients.push(client1);
+      const client1 = await testManager.createClient();
 
       client1.sendMessage({ scope: "lobby", name: "readyForNextGame", data: { isReady: true } });
       const readyStateUpdatedMessage1 = await client1.waitForNextMessage((msg) => msg.name === "readyStateUpdated");
@@ -74,8 +60,7 @@ describe("Scope lobby", () => {
     });
 
     test("should match two ready clients for a game", async () => {
-      const [client1, client2] = await TestClient.newAndReady(serverUrl, 2);
-      clients.push(client1, client2);
+      const [client1, client2] = await testManager.createClients(2);
 
       client1.sendMessage({ scope: "lobby", name: "readyForNextGame", data: { isReady: true } });
       client2.sendMessage({ scope: "lobby", name: "readyForNextGame", data: { isReady: true } });

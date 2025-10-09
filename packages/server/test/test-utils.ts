@@ -15,13 +15,12 @@ export async function startServerWorker() {
   };
 }
 
-export async function waitFor(condition: () => void | Promise<void>, timeout = 100, interval = 2): Promise<void> {
+export async function waitFor<T>(condition: () => T | Promise<T>, timeout = 100, interval = 2): Promise<T> {
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeout) {
     try {
-      await condition();
-      return;
+      return await condition();
     } catch (error) {
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
