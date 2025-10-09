@@ -20,3 +20,15 @@ export function handleReadyForNextGame(ws: ServerWebSocket<unknown>, isReady: bo
     stateStore.getState().lobby.setClientNotReadyForNewGame(ws);
   }
 }
+
+export function sendReadyStateUpdatedMessage(socket: ServerWebSocket<unknown>, isReady: boolean) {
+  const serverMessage: ServerMessage = {
+    scope: "lobby",
+    name: "readyStateUpdated",
+    data: {
+      isReady,
+    },
+  };
+
+  socket.send(JSON.stringify(serverMessage));
+}

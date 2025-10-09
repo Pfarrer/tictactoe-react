@@ -2,7 +2,7 @@ import type { ServerWebSocket } from "bun";
 import { create } from "zustand";
 import { mutative } from "zustand-mutative";
 import { createGame, sendGameJoinedMessage } from "../scopes/game";
-import { sendServerStatistics } from "../scopes/lobby";
+import { sendReadyStateUpdatedMessage, sendServerStatistics } from "../scopes/lobby";
 import type { Game } from "./types";
 
 interface Lobby {
@@ -29,6 +29,7 @@ export const stateStore = create<State>()(
         set((state) => {
           if (state.lobby.clientReadyForNewGame === null) {
             state.lobby.clientReadyForNewGame = ws;
+            sendReadyStateUpdatedMessage(ws, true);
           } else {
             // Create a game with both clients
             const client1 = state.lobby.clientReadyForNewGame;
@@ -36,6 +37,8 @@ export const stateStore = create<State>()(
             const game = createGame(client1, client2);
             state.games.push(game);
             sendGameJoinedMessage(game);
+            sendReadyStateUpdatedMessage(client1, false);
+            sendReadyStateUpdatedMessage(client2, false);
 
             state.lobby.clientReadyForNewGame = null;
           }
@@ -44,6 +47,7 @@ export const stateStore = create<State>()(
         set((state) => {
           if (state.lobby.clientReadyForNewGame === ws) {
             state.lobby.clientReadyForNewGame = null;
+            sendReadyStateUpdatedMessage(ws, false);
           }
         }),
     },

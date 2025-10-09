@@ -13,6 +13,13 @@ export type ServerMessage =
       data: ServerStatistics;
     }
   | {
+      scope: "lobby";
+      name: "readyStateUpdated";
+      data: {
+        isReady: boolean;
+      };
+    }
+  | {
       scope: GameId;
       name: "gameJoined";
       data: object;
