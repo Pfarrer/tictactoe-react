@@ -22,7 +22,9 @@ export type ServerMessage =
   | {
       scope: GameId;
       name: "gameJoined";
-      data: object;
+      data: {
+        firstMove: boolean;
+      };
     };
 
 export type ClientMessage = {

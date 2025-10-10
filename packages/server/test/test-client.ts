@@ -1,5 +1,6 @@
 import type { ClientMessage, ServerMessage } from "@tic-tac-toe/shared/types";
 import { WebSocket } from "ws";
+import { waitFor } from "./test-utils";
 
 export class TestClient {
   ws: WebSocket;
@@ -74,6 +75,23 @@ export class TestClient {
       this.ws.on("message", messageHandler);
       this.ws.on("error", reject);
     });
+  }
+
+  async waitForMessages(filter: (message: ServerMessage) => boolean): Promise<ServerMessage[]> {
+    return waitFor(() => {
+      const hits = this.receivedMessages.reverse().filter(filter);
+      return hits.length > 0 ? hits : null;
+    });
+  }
+
+  async waitForMessage(filter: (message: ServerMessage) => boolean): Promise<ServerMessage> {
+    const messages = await this.waitForMessages(filter);
+    if (messages.length === 1) return messages[0]!;
+    else throw new Error(`Expected single message, but found: ${messages}`);
+  }
+
+  clearReceivedMessages() {
+    this.receivedMessages = [];
   }
 
   close() {

@@ -12,13 +12,21 @@ export function createGame(client1: ServerWebSocket<unknown>, client2: ServerWeb
 }
 
 export function sendGameJoinedMessage(game: Game) {
-  const gameJoinedMessage: ServerMessage = {
+  const gameJoinedMessage1: ServerMessage = {
     scope: game.id,
     name: "gameJoined",
-    data: {},
+    data: {
+      firstMove: false,
+    },
+  };
+  const gameJoinedMessage2: ServerMessage = {
+    scope: game.id,
+    name: "gameJoined",
+    data: {
+      firstMove: true,
+    },
   };
 
-  const msg = JSON.stringify(gameJoinedMessage);
-  game.client1.send(msg);
-  game.client2.send(msg);
+  game.client1.send(JSON.stringify(gameJoinedMessage1));
+  game.client2.send(JSON.stringify(gameJoinedMessage2));
 }
