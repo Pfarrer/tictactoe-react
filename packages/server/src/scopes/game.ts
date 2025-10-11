@@ -1,8 +1,7 @@
-import type { ServerMessage } from "@tic-tac-toe/shared/types";
+import type { GameId, ServerMessage } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
-import type { Game } from "../state/types";
 import { stateStore } from "../state/state";
-import type { GameId } from "@tic-tac-toe/shared/types";
+import type { Game } from "../state/types";
 
 export function createGame(client1: ServerWebSocket<unknown>, client2: ServerWebSocket<unknown>): Game {
   return {
@@ -37,12 +36,7 @@ export function sendGameJoinedMessage(game: Game) {
 }
 
 export function isValidMove(game: Game, cellIdx: number): boolean {
-  return (
-    !game.gameOver &&
-    cellIdx >= 0 &&
-    cellIdx < 9 &&
-    game.board[cellIdx] === null
-  );
+  return !game.gameOver && cellIdx >= 0 && cellIdx < 9 && game.board[cellIdx] === null;
 }
 
 export function makeMove(game: Game, cellIdx: number, playerIndex: number): boolean {
@@ -55,20 +49,25 @@ export function makeMove(game: Game, cellIdx: number, playerIndex: number): bool
 
   // Check for win condition (simplified - just check rows, columns, diagonals)
   const winPatterns = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-    [0, 4, 8], [2, 4, 6] // diagonals
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8], // rows
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8], // columns
+    [0, 4, 8],
+    [2, 4, 6], // diagonals
   ];
 
   for (const pattern of winPatterns) {
-    if (pattern.every(idx => game.board[idx] === playerIndex)) {
+    if (pattern.every((idx) => game.board[idx] === playerIndex)) {
       game.gameOver = true;
       break;
     }
   }
 
   // Check for draw
-  if (!game.gameOver && game.board.every(cell => cell !== null)) {
+  if (!game.gameOver && game.board.every((cell) => cell !== null)) {
     game.gameOver = true;
   }
 
@@ -82,7 +81,7 @@ export function getPlayerIndex(game: Game, ws: ServerWebSocket<unknown>): number
 }
 
 export function handleRequestMove(ws: ServerWebSocket<unknown>, gameId: GameId, cellIdx: number) {
-  const game = stateStore.getState().games.find(g => g.id === gameId);
+  const game = stateStore.getState().games.find((g) => g.id === gameId);
   if (!game) {
     console.warn(`handleRequestMove called for ${gameId} which is not known`);
     return;

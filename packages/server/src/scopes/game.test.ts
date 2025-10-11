@@ -1,7 +1,7 @@
+import type { GameId } from "@tic-tac-toe/shared/types";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { TestClient } from "../../test/test-client";
 import { TestManager } from "../../test/test-manager";
-import type { GameId } from "@tic-tac-toe/shared/types";
 
 describe("Game scope", async () => {
   const testManager: TestManager = await TestManager.registerTestHooks();
@@ -34,7 +34,7 @@ describe("Game scope", async () => {
       client1.sendMessage({
         scope: gameId,
         name: "requestMove",
-        data: { cellIdx: 4 }
+        data: { cellIdx: 4 },
       });
 
       const moveMessage1 = await client1.waitForMessage(({ name }) => name === "movePlayed");
@@ -55,7 +55,7 @@ describe("Game scope", async () => {
       client2.sendMessage({
         scope: gameId,
         name: "requestMove",
-        data: { cellIdx: 4 }
+        data: { cellIdx: 4 },
       });
 
       // Should not receive a movePlayed message
@@ -76,6 +76,6 @@ describe("Game scope", async () => {
     const gameJoinedMessage1 = await client1.waitForMessage((msg) => msg.name === "gameJoined");
     if (gameJoinedMessage1.name !== "gameJoined") return expect.unreachable();
     if (gameJoinedMessage1.data.firstMove) return [gameJoinedMessage1.scope, client1, client2];
-    else return [gameJoinedMessage1.scope, client2, client1]
+    else return [gameJoinedMessage1.scope, client2, client1];
   }
 });

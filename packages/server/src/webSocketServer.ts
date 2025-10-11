@@ -1,6 +1,6 @@
 import type { ClientMessage } from "@tic-tac-toe/shared/types";
-import { handleReadyForNextGame } from "./scopes/lobby";
 import { handleRequestMove } from "./scopes/game";
+import { handleReadyForNextGame } from "./scopes/lobby";
 import { stateStore } from "./state/state";
 
 export function startServer(port: number = 0) {
