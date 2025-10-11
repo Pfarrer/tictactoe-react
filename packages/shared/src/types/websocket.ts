@@ -25,12 +25,28 @@ export type ServerMessage =
       data: {
         firstMove: boolean;
       };
+    }
+  | {
+      scope: GameId;
+      name: "movePlayed";
+      data: {
+        isYourMove: boolean;
+        cellIdx: number;
+      };
     };
 
-export type ClientMessage = {
-  scope: "lobby";
-  name: "readyForNextGame";
-  data: {
-    isReady: boolean;
-  };
-};
+export type ClientMessage =
+  | {
+      scope: "lobby";
+      name: "readyForNextGame";
+      data: {
+        isReady: boolean;
+      };
+    }
+  | {
+      scope: GameId;
+      name: "requestMove";
+      data: {
+        cellIdx: number; // 0-8 for 3x3 grid
+      };
+    };

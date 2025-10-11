@@ -1,5 +1,6 @@
 import type { ClientMessage } from "@tic-tac-toe/shared/types";
 import { handleReadyForNextGame } from "./scopes/lobby";
+import { handleRequestMove } from "./scopes/game";
 import { stateStore } from "./state/state";
 
 export function startServer(port: number = 0) {
@@ -23,6 +24,9 @@ export function startServer(port: number = 0) {
           switch (clientMessage.name) {
             case "readyForNextGame":
               handleReadyForNextGame(ws, clientMessage.data.isReady);
+              break;
+            case "requestMove":
+              handleRequestMove(ws, clientMessage.scope, clientMessage.data.cellIdx);
               break;
             default:
               console.warn("Unknown message type:", clientMessage);
