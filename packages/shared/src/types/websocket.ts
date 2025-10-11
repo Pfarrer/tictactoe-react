@@ -33,6 +33,14 @@ export type ServerMessage =
         isYourMove: boolean;
         cellIdx: number;
       };
+    }
+  | {
+      scope: GameId;
+      name: "gameOver";
+      data: {
+        result: "youWon" | "youLost" | "draw";
+        winningCells?: number[]; // Array of 3 cell indices for winning combination
+      };
     };
 
 export type ClientMessage =

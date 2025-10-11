@@ -63,6 +63,64 @@ describe("Game scope", async () => {
       expect(client1.receivedMessages).toBeEmpty();
       expect(client2.receivedMessages).toBeEmpty();
     });
+
+    test("move is rejected when game is over", async () => {
+      client1.clearReceivedMessages();
+      client2.clearReceivedMessages();
+
+      // Manually trigger a game over by making a move and checking if gameOver message appears
+      // First, let's see what happens with a simple draw scenario
+      const drawMoves = [0, 1, 2, 4, 3, 5, 7, 6, 8]; // Fill all cells for a draw
+
+      // Make all moves to complete the game
+      for (let i = 0; i < drawMoves.length; i++) {
+        const cellIdx = drawMoves[i]!;
+        const currentClient = i % 2 === 0 ? client1 : client2;
+        const otherClient = i % 2 === 0 ? client2 : client1;
+
+        currentClient.sendMessage({
+          scope: gameId,
+          name: "requestMove",
+          data: { cellIdx },
+        });
+
+        // Wait for movePlayed message from both clients
+        const moveMessage1 = await currentClient.waitForMessage(({ name }) => name === "movePlayed");
+        const moveMessage2 = await otherClient.waitForMessage(({ name }) => name === "movePlayed");
+        if (moveMessage1.name !== "movePlayed" || moveMessage2.name !== "movePlayed") return expect.unreachable();
+
+        // Check if this was the final move (i == 8 means last move)
+        if (i === 8) {
+          // Wait a bit for gameOver message
+          await new Promise((resolve) => setTimeout(resolve, 20));
+
+          // Check if gameOver message was sent
+          const gameOverMessage1 = client1.receivedMessages.find(({ name }) => name === "gameOver");
+          const gameOverMessage2 = client2.receivedMessages.find(({ name }) => name === "gameOver");
+
+          if (!gameOverMessage1 || !gameOverMessage2) {
+            console.log("No gameOver message found after draw");
+            return expect.unreachable();
+          }
+        }
+      }
+
+      // Clear messages after game ends
+      client1.clearReceivedMessages();
+      client2.clearReceivedMessages();
+
+      // Try to make a move after game is over
+      client1.sendMessage({
+        scope: gameId,
+        name: "requestMove",
+        data: { cellIdx: 0 }, // Any cell, should be rejected
+      });
+
+      // Should not receive any messages (movePlayed or gameOver)
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(client1.receivedMessages).toBeEmpty();
+      expect(client2.receivedMessages).toBeEmpty();
+    });
   });
 
   async function initializeGameWithTwoClients(): Promise<[GameId, TestClient, TestClient]> {

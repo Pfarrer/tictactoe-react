@@ -9,4 +9,6 @@ export interface Game {
   board: (number | null)[]; // null: empty, 0: client1, 1: client2
   currentTurn: number; // 0: client1's turn, 1: client2's turn
   gameOver: boolean;
+  winner: number | null; // 0: client1, 1: client2, null: draw or ongoing
+  winningCells: number[] | null; // Array of 3 cell indices for winning combination
 }

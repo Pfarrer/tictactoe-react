@@ -12,6 +12,8 @@ export function createGame(client1: ServerWebSocket<unknown>, client2: ServerWeb
     board: Array(9).fill(null),
     currentTurn: 1, // client2 starts first
     gameOver: false,
+    winner: null,
+    winningCells: null,
   };
 }
 
@@ -45,9 +47,8 @@ export function makeMove(game: Game, cellIdx: number, playerIndex: number): bool
   }
 
   game.board[cellIdx] = playerIndex;
-  game.currentTurn = 1 - playerIndex; // Switch turns
 
-  // Check for win condition (simplified - just check rows, columns, diagonals)
+  // Check for win condition first (before switching turns)
   const winPatterns = [
     [0, 1, 2],
     [3, 4, 5],
@@ -62,15 +63,22 @@ export function makeMove(game: Game, cellIdx: number, playerIndex: number): bool
   for (const pattern of winPatterns) {
     if (pattern.every((idx) => game.board[idx] === playerIndex)) {
       game.gameOver = true;
-      break;
+      game.winner = playerIndex;
+      game.winningCells = pattern;
+      return true;
     }
   }
 
   // Check for draw
-  if (!game.gameOver && game.board.every((cell) => cell !== null)) {
+  if (game.board.every((cell) => cell !== null)) {
     game.gameOver = true;
+    game.winner = null;
+    game.winningCells = null;
+    return true;
   }
 
+  // Switch turns only if game is not over
+  game.currentTurn = 1 - playerIndex;
   return true;
 }
 
@@ -123,4 +131,32 @@ export function handleRequestMove(ws: ServerWebSocket<unknown>, gameId: GameId, 
 
   game.client1.send(JSON.stringify(moveMessageForPlayer1));
   game.client2.send(JSON.stringify(moveMessageForPlayer2));
+
+  // Send gameOver message if game ended
+  if (game.gameOver) {
+    sendGameOverMessage(game);
+  }
+}
+
+function sendGameOverMessage(game: Game) {
+  const gameOverMessageForPlayer1: ServerMessage = {
+    scope: game.id,
+    name: "gameOver",
+    data: {
+      result: game.winner === null ? "draw" : game.winner === 0 ? "youWon" : "youLost",
+      winningCells: game.winningCells || undefined,
+    },
+  };
+
+  const gameOverMessageForPlayer2: ServerMessage = {
+    scope: game.id,
+    name: "gameOver",
+    data: {
+      result: game.winner === null ? "draw" : game.winner === 1 ? "youWon" : "youLost",
+      winningCells: game.winningCells || undefined,
+    },
+  };
+
+  game.client1.send(JSON.stringify(gameOverMessageForPlayer1));
+  game.client2.send(JSON.stringify(gameOverMessageForPlayer2));
 }
