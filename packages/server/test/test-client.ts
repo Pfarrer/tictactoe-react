@@ -57,6 +57,10 @@ export class TestClient {
     this.ws.send(JSON.stringify(message));
   }
 
+  sendRaw(data: string) {
+    this.ws.send(data);
+  }
+
   async waitForNextMessage(filter: (message: ServerMessage) => boolean): Promise<ServerMessage> {
     return new Promise((resolve, reject) => {
       const messageHandler = (data: string) => {

@@ -2,6 +2,7 @@ import type { GameId, ServerMessage } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
 import { stateStore } from "../state/state";
 import type { Game } from "../state/types";
+import { sendRejection } from "../webSocketServer";
 
 export function createGame(client1: ServerWebSocket<unknown>, client2: ServerWebSocket<unknown>): Game {
   return {
@@ -88,26 +89,28 @@ export function getPlayerIndex(game: Game, ws: ServerWebSocket<unknown>): number
   return null;
 }
 
-export function handleRequestMove(ws: ServerWebSocket<unknown>, gameId: GameId, cellIdx: number) {
+export function handleRequestMove(ws: ServerWebSocket<unknown>, gameId: GameId, cellIdx: number, messageId: string) {
   const game = stateStore.getState().games.find((g) => g.id === gameId);
   if (!game) {
-    console.warn(`handleRequestMove called for ${gameId} which is not known`);
+    sendRejection(ws, messageId, `Game ${gameId} not found`);
     return;
   }
 
   const playerIndex = getPlayerIndex(game, ws);
   if (playerIndex === null) {
-    console.warn(`handleRequestMove called for client which is not part of game ${gameId}`);
+    sendRejection(ws, messageId, `Client is not part of game ${gameId}`);
     return;
   }
 
   if (game.currentTurn !== playerIndex) {
-    return; // Silently reject moves when it's not the player's turn
+    sendRejection(ws, messageId, "Not your turn to move");
+    return;
   }
 
   const moveSuccessful = makeMove(game, cellIdx, playerIndex);
   if (!moveSuccessful) {
-    return; // Silently reject invalid moves
+    sendRejection(ws, messageId, "Invalid move: cell is occupied or game is over");
+    return;
   }
 
   // Send movePlayed messages to both clients

@@ -44,12 +44,12 @@ describe("Lobby scope", async () => {
     test("should send readyStateUpdated server messages to the client", async () => {
       const client1 = await testManager.createClient();
 
-      client1.sendMessage({ scope: "lobby", name: "readyForNextGame", data: { isReady: true } });
+      client1.sendMessage({ id: "msg-ready-1", scope: "lobby", name: "readyForNextGame", data: { isReady: true } });
       const readyStateUpdatedMessage1 = await client1.waitForNextMessage((msg) => msg.name === "readyStateUpdated");
       expect(readyStateUpdatedMessage1.scope).toStartWith("lobby");
       expect(readyStateUpdatedMessage1.data).toEqual({ isReady: true });
 
-      client1.sendMessage({ scope: "lobby", name: "readyForNextGame", data: { isReady: false } });
+      client1.sendMessage({ id: "msg-ready-2", scope: "lobby", name: "readyForNextGame", data: { isReady: false } });
       const readyStateUpdatedMessage2 = await client1.waitForNextMessage((msg) => msg.name === "readyStateUpdated");
       expect(readyStateUpdatedMessage2.scope).toStartWith("lobby");
       expect(readyStateUpdatedMessage2.data).toEqual({ isReady: false });
