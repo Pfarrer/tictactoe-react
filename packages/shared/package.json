@@ -19,10 +19,6 @@
     }
   },
   "scripts": {
-    "test": "vitest --coverage"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "vitest": "^3.2.4"
+    "test": "bun test"
   }
 }

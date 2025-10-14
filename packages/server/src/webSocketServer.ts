@@ -1,4 +1,4 @@
-import type { ServerMessage, GameId } from "@tic-tac-toe/shared/types";
+import type { GameId, ServerMessage } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
 import { handleRequestMove } from "./scopes/game";
 import { handleReadyForNextGame } from "./scopes/lobby";

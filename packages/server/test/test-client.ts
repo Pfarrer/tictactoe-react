@@ -1,5 +1,4 @@
 import type { ClientMessage, ServerMessage } from "@tic-tac-toe/shared/types";
-import { WebSocket } from "ws";
 import { waitFor } from "./test-utils";
 
 export class TestClient {
@@ -36,7 +35,7 @@ export class TestClient {
   }
 
   private registerCallbacks() {
-    this.ws.on("message", (data: string) => {
+    this.ws.addEventListener("message", ({ data }) => {
       const message = JSON.parse(data.toString()) as ServerMessage;
       this.receivedMessages.push(message);
     });
@@ -48,7 +47,7 @@ export class TestClient {
         resolve();
         return;
       }
-      this.ws.once("open", resolve);
+      this.ws.addEventListener("open", () => resolve(), { once: true });
     });
     return this;
   }
@@ -63,21 +62,21 @@ export class TestClient {
 
   async waitForNextMessage(filter: (message: ServerMessage) => boolean): Promise<ServerMessage> {
     return new Promise((resolve, reject) => {
-      const messageHandler = (data: string) => {
+      const messageHandler = ({ data }: { data: string }) => {
         try {
           const message = JSON.parse(data.toString()) as ServerMessage;
           if (filter(message)) {
-            this.ws.off("message", messageHandler);
+            this.ws.removeEventListener("message", messageHandler);
             resolve(message);
           }
         } catch (error) {
-          this.ws.off("message", messageHandler);
+          this.ws.removeEventListener("message", messageHandler);
           reject(error);
         }
       };
 
-      this.ws.on("message", messageHandler);
-      this.ws.on("error", reject);
+      this.ws.addEventListener("message", messageHandler);
+      this.ws.addEventListener("error", reject);
     });
   }
 
@@ -105,7 +104,7 @@ export class TestClient {
     }
   }
 
-  onError(handler: (error: Error) => void) {
-    this.ws.on("error", handler);
+  onError(handler: (error: Event) => void) {
+    this.ws.addEventListener("error", handler);
   }
 }

@@ -75,14 +75,15 @@ export function validateClientMessageWithZod(message: unknown): {
         if (msg.scope !== "lobby") {
           errors.push("readyForNextGame requires scope 'lobby'");
         }
-        if (typeof msg.data?.isReady !== "boolean") {
+        if (typeof (msg.data as Record<string, unknown>).isReady !== "boolean") {
           errors.push("readyForNextGame requires boolean isReady field");
         }
       } else if (msg.name === "requestMove") {
         if (typeof msg.scope !== "string" || !msg.scope.startsWith("g-")) {
           errors.push("requestMove requires valid game ID (starts with 'g-')");
         }
-        if (typeof msg.data?.cellIdx !== "number" || msg.data.cellIdx < 0 || msg.data.cellIdx > 8) {
+        const cellIdx = (msg.data as Record<string, unknown>).cellIdx;
+        if (typeof cellIdx !== "number" || cellIdx < 0 || cellIdx > 8) {
           errors.push("requestMove requires cellIdx between 0 and 8");
         }
       } else {
@@ -111,7 +112,7 @@ export function validateMessageWithErrorId(message: unknown): {
   error?: string;
 } {
   const msg = message as Record<string, unknown>;
-  const messageId = (msg?.id && typeof msg.id === 'string') ? msg.id : "unknown";
+  const messageId = msg?.id && typeof msg.id === "string" ? msg.id : "unknown";
 
   try {
     clientMessageSchema.parse(message);
