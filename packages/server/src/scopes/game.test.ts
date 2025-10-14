@@ -89,7 +89,7 @@ describe("Game scope", async () => {
       if (rejectionMessage.name !== "messageRejected") return expect.unreachable();
       expect(rejectionMessage.name).toBe("messageRejected");
       expect(rejectionMessage.data.messageId).toBe("move-invalid-cell");
-      expect(rejectionMessage.data.reason).toBe("Invalid data: requestMove requires cellIdx between 0 and 8");
+      expect(rejectionMessage.data.reason).toBe("requestMove requires cellIdx between 0 and 8");
 
       // Should not receive any movePlayed messages
       expect(client1.receivedMessages.filter((msg) => msg.name === "movePlayed")).toBeEmpty();
@@ -120,9 +120,7 @@ describe("Game scope", async () => {
       const rejectionMessage = await client1.waitForMessage(({ name }) => name === "messageRejected");
       if (rejectionMessage.name !== "messageRejected") return expect.unreachable();
       expect(rejectionMessage.name).toBe("messageRejected");
-      expect(rejectionMessage.data.reason).toBe(
-        "Invalid message format: missing required fields (id, scope, name, data)",
-      );
+      expect(rejectionMessage.data.reason).toBe("id must be a non-empty string");
     });
 
     test("invalid message type is rejected", async () => {
@@ -156,7 +154,7 @@ describe("Game scope", async () => {
       if (rejectionMessage.name !== "messageRejected") return expect.unreachable();
       expect(rejectionMessage.name).toBe("messageRejected");
       expect(rejectionMessage.data.messageId).toBe("msg-wrong-scope");
-      expect(rejectionMessage.data.reason).toBe("Invalid scope: readyForNextGame requires scope 'lobby'");
+      expect(rejectionMessage.data.reason).toBe("readyForNextGame requires scope 'lobby'");
     });
 
     test("invalid data for requestMove is rejected", async () => {
@@ -173,7 +171,7 @@ describe("Game scope", async () => {
       if (rejectionMessage.name !== "messageRejected") return expect.unreachable();
       expect(rejectionMessage.name).toBe("messageRejected");
       expect(rejectionMessage.data.messageId).toBe("msg-invalid-cell");
-      expect(rejectionMessage.data.reason).toBe("Invalid data: requestMove requires cellIdx between 0 and 8");
+      expect(rejectionMessage.data.reason).toBe("requestMove requires cellIdx between 0 and 8");
     });
   });
 
