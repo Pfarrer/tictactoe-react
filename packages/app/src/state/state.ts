@@ -1,6 +1,7 @@
 import { MAIN_MENU_SERVER_URL_DEFAULT, SOLO_GAME_COMPUTER_MOVE_DELAY_MS } from "#constants.ts";
 import { sendReadyForNextGame, sendRequestMove } from "#server/send.ts";
 import * as websocket from "#server/websocket.ts";
+import { hasWinner } from "@tic-tac-toe/shared/core";
 import {
   type BoardCells,
   type Difficulty,
@@ -16,39 +17,6 @@ import { devtools } from "zustand/middleware";
 import { playNextTurn } from "./computerPlayer";
 import { type AppPage, AppPageValues, type MainMenuTab, MainMenuTabValues, type ServerStatus } from "./types";
 import { requireValidType } from "./utils";
-
-function findWinningCell(board: BoardCells): undefined | "x" | "o" {
-  // Check horizontally
-  for (let row = 0; row < 3; row++) {
-    const offset = 3 * row;
-    const cell = board[offset + 0];
-    if (cell !== " " && cell === board[offset + 1] && cell === board[offset + 2]) {
-      return cell as "x" | "o";
-    }
-  }
-
-  // Check vertically
-  for (let column = 0; column < 3; column++) {
-    const cell = board[0 + column];
-    if (cell !== " " && cell === board[3 + column] && cell === board[6 + column]) {
-      return cell as "x" | "o";
-    }
-  }
-
-  // Check diagonally "/"
-  const diag1Cell = board[2];
-  if (diag1Cell !== " " && diag1Cell === board[4] && board[4] === board[6]) {
-    return diag1Cell as "x" | "o";
-  }
-
-  // Check diagonally "\"
-  const diag2Cell = board[0];
-  if (diag2Cell !== " " && diag2Cell === board[4] && board[4] === board[8]) {
-    return diag2Cell as "x" | "o";
-  }
-
-  return undefined;
-}
 
 type State = {
   activePage: AppPage;
@@ -384,7 +352,7 @@ function checkAndUpdateIfGameIsFinished(state: State): boolean {
     return false;
   }
 
-  const winningCell = findWinningCell(state.boardCells);
+  const winningCell = hasWinner(state.boardCells);
   if (winningCell !== undefined) {
     if (gameSession.mode === "hotseat") {
       // For hotseat games, convert board cell to player type

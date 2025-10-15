@@ -1,3 +1,4 @@
+import { findWinningCells, hasWinner } from "@tic-tac-toe/shared/core";
 import type { GameId, ServerMessage } from "@tic-tac-toe/shared/types";
 import type { ServerWebSocket } from "bun";
 import { stateStore } from "../state/state";
@@ -49,25 +50,17 @@ export function makeMove(game: Game, cellIdx: number, playerIndex: number): bool
 
   game.board[cellIdx] = playerIndex;
 
-  // Check for win condition first (before switching turns)
-  const winPatterns = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8], // rows
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8], // columns
-    [0, 4, 8],
-    [2, 4, 6], // diagonals
-  ];
+  // Convert server board to shared format for winner detection
+  const sharedBoard = game.board.map((cell) => (cell === null ? " " : cell === 0 ? "x" : "o")) as Array<
+    " " | "x" | "o"
+  >;
+  const winner = hasWinner(sharedBoard as any);
 
-  for (const pattern of winPatterns) {
-    if (pattern.every((idx) => game.board[idx] === playerIndex)) {
-      game.gameOver = true;
-      game.winner = playerIndex;
-      game.winningCells = pattern;
-      return true;
-    }
+  if (winner !== undefined) {
+    game.gameOver = true;
+    game.winner = playerIndex;
+    game.winningCells = findWinningCells(sharedBoard as any) || null;
+    return true;
   }
 
   // Check for draw
