@@ -1,14 +1,34 @@
-import type { BoardCell, BoardCells, PlayerType } from "../../types/fundamental";
+import type { BoardCell, BoardCells } from "../../types/fundamental";
 
 const DIMENSIONS = 3;
 
-export function hasWinner(board: BoardCells): PlayerType | undefined {
-  const victoriousCellValue = findVictoriousCellValue(board);
-  if (victoriousCellValue) {
-    return victoriousCellValue === "x" ? "human" : "computer";
-  } else {
-    return undefined;
+export function hasWinner(board: BoardCells): BoardCell | undefined {
+  return findVictoriousCellValue(board);
+}
+
+export function findWinningCells(board: BoardCells): number[] | undefined {
+  const winPatterns = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8], // rows
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8], // columns
+    [0, 4, 8],
+    [2, 4, 6], // diagonals
+  ];
+
+  for (const pattern of winPatterns) {
+    const firstIndex = pattern[0];
+    if (firstIndex !== undefined) {
+      const firstCell = board[firstIndex];
+      if (firstCell !== " " && pattern.every((idx) => board[idx] === firstCell)) {
+        return pattern;
+      }
+    }
   }
+
+  return undefined;
 }
 
 function findVictoriousCellValue(b: BoardCells): undefined | BoardCell {

@@ -1,1 +1,1 @@
-export { hasWinner } from "./hasWinner/hasWinner";
+export { findWinningCells, hasWinner } from "./hasWinner/hasWinner";

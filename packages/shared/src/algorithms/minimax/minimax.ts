@@ -27,8 +27,8 @@ function minimax(board: BoardCells, depth: number, isMaximizing: boolean, maxDep
   }
 
   const winner = hasWinner(board);
-  if (winner === "computer") return 10 - depth;
-  if (winner === "human") return depth - 10;
+  if (winner === "o") return 10 - depth;
+  if (winner === "x") return depth - 10;
   if (board.every((cell) => cell !== " ")) return 0;
 
   if (isMaximizing) {
