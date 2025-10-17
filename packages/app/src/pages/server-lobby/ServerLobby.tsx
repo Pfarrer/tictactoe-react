@@ -1,5 +1,6 @@
 import { Button } from "#components/Button.tsx";
 import { DialogBody, DialogRoot, DialogTitle } from "#components/Dialog.tsx";
+import { HorizontalLine } from "#components/HorizontalLine.tsx";
 import { useRandomBoardCells } from "#pages/main-menu/useRandomBoardCells.ts";
 import { useStateStore } from "#state/state.ts";
 
@@ -13,20 +14,37 @@ export function ServerLobby() {
     <DialogRoot>
       <DialogTitle text={`Server Lobby @ ${serverHostname}`} />
       <DialogBody>
-        <Description />
-        <Button onClick={disconnectFromServer}>Disconnect</Button>
+        <ServerInfo />
+        <HorizontalLine />
+
+        <JoinGameSection />
+        <HorizontalLine />
+
+        <Button kind="secondary" onClick={disconnectFromServer}>
+          Disconnect
+        </Button>
       </DialogBody>
     </DialogRoot>
   );
 }
 
-function Description() {
-  const serverStatistics = useStateStore((state) => state.serverConnection.statistics);
+function ServerInfo() {
+  const serverStatistics = useStateStore((state) => state.serverLobby.statistics);
 
-  function serverStatisticsText(): string {
-    if (!serverStatistics) return "waiting for server statistics...";
-    return `${serverStatistics.activeGamesCount} active games, ${serverStatistics.connectedPlayersCount} players online`;
+  if (!serverStatistics) {
+    return "Waiting for server statistics...";
   }
 
-  return serverStatisticsText();
+  return `${serverStatistics.activeGamesCount} active games, ${serverStatistics.connectedPlayersCount} players online`;
+}
+
+function JoinGameSection() {
+  const isReady = useStateStore((state) => state.serverLobby.isReady);
+  const setReady = useStateStore((state) => state.serverLobby.setReady);
+
+  return (
+    <Button kind="primary" onClick={() => setReady(!isReady)} showSpinner={isReady}>
+      {isReady ? "Waiting for players..." : "Join next Game!"}
+    </Button>
+  );
 }

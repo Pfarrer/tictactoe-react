@@ -1,9 +1,11 @@
 import { MAIN_MENU_SERVER_URL_DEFAULT, SOLO_GAME_COMPUTER_MOVE_DELAY_MS } from "#constants.ts";
+import { sendReadyForNextGame, sendRequestMove } from "#server/send.ts";
 import * as websocket from "#server/websocket.ts";
 import {
   type BoardCells,
   type Difficulty,
   DifficultyValues,
+  type GameId,
   type GameStatus,
   type PlayerType,
   type ServerStatistics,
@@ -50,37 +52,11 @@ function findWinningCell(board: BoardCells): undefined | "x" | "o" {
 
 type State = {
   activePage: AppPage;
-  mainMenu: {
-    selectedTab: MainMenuTab;
-    soloDifficulty: Difficulty;
-  };
-  gameSession:
-    | null
-    | {
-        mode: "solo";
-        status: GameStatus;
-        difficulty: Difficulty;
-        nextTurn: PlayerType;
-        winner?: PlayerType;
-      }
-    | {
-        mode: "hotseat";
-        status: GameStatus;
-        nextTurn: PlayerType;
-        winner?: PlayerType;
-      };
-  serverConnection: {
-    url: string;
-    status: ServerStatus;
-    statistics?: ServerStatistics;
-  };
-  boardCells: BoardCells;
-};
-
-type Actions = {
   navigateToPage(page: AppPage): void;
 
   mainMenu: {
+    selectedTab: MainMenuTab;
+    soloDifficulty: Difficulty;
     selectTab(name: string): void;
     setSoloDifficulty: (difficulty: string) => void;
     startSoloGame: () => void;
@@ -91,27 +67,54 @@ type Actions = {
     | null
     | {
         mode: "solo";
+        status: GameStatus;
+        difficulty: Difficulty;
+        nextTurn: PlayerType;
+        winner?: PlayerType;
         requestPlayerMove: (cellIdx: number) => void;
         requestComputerMove: (cellIdx: number) => void;
       }
     | {
         mode: "hotseat";
+        status: GameStatus;
+        nextTurn: PlayerType;
+        winner?: PlayerType;
         requestHotseatMove: (cellIdx: number) => void;
+      }
+    | {
+        mode: "online";
+        gameId: GameId;
+        status: GameStatus;
+        nextTurn: PlayerType;
+        winner?: PlayerType;
+        requestPlayerMove: (cellIdx: number) => void;
+        movePlayed: (wasYourMove: boolean, cellIdx: number) => void;
+        receivedGameOver: (winner: PlayerType | undefined) => void;
       };
 
   serverConnection: {
+    url: string;
+    status: ServerStatus;
     setUrl(url: string): void;
     connectToServer(): void;
     connectionEstablished(): void;
     disconnectFromServer(): void;
   };
 
+  serverLobby: {
+    statistics?: ServerStatistics;
+    isReady: boolean;
+    setReady(ready: boolean): void;
+    startOnlineGame: (gameId: GameId, firstMove: boolean) => void;
+  };
+
+  boardCells: BoardCells;
   setBoardCells(board: BoardCells): void;
 };
 
-type StateSetFn = (updater: (draft: State & Actions) => void, replace?: boolean, name?: string) => void;
+type StateSetFn = (updater: (draft: State) => void, replace?: boolean, name?: string) => void;
 
-export const useStateStore = create<State & Actions>()(
+export const useStateStore = create<State>()(
   mutative(
     devtools((set) => ({
       activePage: "main-menu",
@@ -239,7 +242,7 @@ export const useStateStore = create<State & Actions>()(
           set(
             (state) => {
               state.serverConnection.status = "disconnected";
-              state.serverConnection.statistics = undefined;
+              state.serverLobby.statistics = undefined;
               state.activePage = "main-menu";
             },
             true,
@@ -247,11 +250,70 @@ export const useStateStore = create<State & Actions>()(
           ),
       },
 
+      serverLobby: {
+        statistics: null,
+        isReady: false,
+        setReady: (isReady: boolean) => sendReadyForNextGame(isReady),
+        startOnlineGame: (gameId, firstMove) =>
+          set(
+            (state) => {
+              state.gameSession = {
+                mode: "online",
+                gameId,
+                status: "pristine",
+                nextTurn: firstMove ? "human" : "computer",
+                requestPlayerMove: (cellIdx: number) => sendRequestMove(gameId, cellIdx),
+                movePlayed: (wasYourMove: boolean, cellIdx: number) =>
+                  set(
+                    (state) => {
+                      const gameSession = state.gameSession;
+                      if (gameSession?.mode !== "online") {
+                        throw new Error(
+                          "Action called for an online game session, but gameSession is " + state.gameSession,
+                        );
+                      }
+
+                      gameSession.status = "active";
+                      state.boardCells[cellIdx] = wasYourMove ? "x" : "o";
+                      gameSession.nextTurn = wasYourMove ? "computer" : "human";
+                    },
+                    true,
+                    "gameSession/movePlayed",
+                  ),
+                receivedGameOver: (winner: PlayerType | undefined) =>
+                  set(
+                    (state) => {
+                      const gameSession = state.gameSession;
+                      if (gameSession?.mode !== "online") {
+                        throw new Error(
+                          "Action called for an online game session, but gameSession is " + state.gameSession,
+                        );
+                      }
+
+                      gameSession.status = "finished";
+                      gameSession.winner = winner;
+                    },
+                    true,
+                    "gameSession/receivedGameOver",
+                  ),
+              };
+              state.boardCells = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+              state.activePage = "online-game";
+            },
+            true,
+            "serverLobby/startOnlineGame",
+          ),
+      },
+
       boardCells: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
       setBoardCells: (boardCells) =>
-        set((state) => {
-          state.boardCells = boardCells;
-        }),
+        set(
+          (state) => {
+            state.boardCells = boardCells;
+          },
+          true,
+          "setBoardCells",
+        ),
     })),
   ),
 );

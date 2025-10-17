@@ -11,7 +11,8 @@ export function Cells() {
   const isGameActive = gameSession?.status === "pristine" || gameSession?.status === "active";
 
   // Use whatever move handler is available for the current game mode
-  const requestMove = gameSession?.mode === "solo" ? gameSession?.requestPlayerMove : gameSession?.requestHotseatMove;
+  const requestMove =
+    gameSession?.mode === "hotseat" ? gameSession?.requestHotseatMove : gameSession?.requestPlayerMove;
 
   return (
     <Layer listening={isGameActive && !!requestMove}>

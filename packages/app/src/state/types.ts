@@ -1,6 +1,6 @@
 import type { GameStatus, PlayerType } from "@tic-tac-toe/shared/types";
 
-export const AppPageValues = ["main-menu", "server-lobby", "solo-game", "hotseat-game"] as const;
+export const AppPageValues = ["main-menu", "server-lobby", "solo-game", "hotseat-game", "online-game"] as const;
 export type AppPage = (typeof AppPageValues)[number];
 
 export const MainMenuTabValues = ["solo", "hotseat", "online"] as const;
